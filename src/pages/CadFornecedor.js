@@ -2,6 +2,7 @@ import Menu from '../components/Menu';
 import { useEffect, useState, useCallback } from "react";
 import API from "../utils/api";
 import Modal from "../components/Modal";
+import InputMask from 'react-input-mask';
 
 function Fornecedor() {
 
@@ -319,12 +320,12 @@ function Fornecedor() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="nomeF" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome Fantasia</label>
+                                    <label htmlFor="NomeFantasia" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome Fantasia</label>
                                     <input
                                         type="text"
-                                        name="nomeF"
+                                        name="NomeFantasia"
                                         onChange={(e) => setCreateForn({ ...createForn, NomeFantasia: e.target.value })}
-                                        id="nomeF"
+                                        id="NomeFantasia"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
@@ -332,11 +333,12 @@ function Fornecedor() {
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="cnpj" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CNPJ</label>
-                                    <input
+                                    <InputMask
                                         type="text"
                                         name="cnpj"
                                         onChange={(e) => setCreateForn({ ...createForn, CNPJ: e.target.value })}
                                         id="cnpj"
+                                        mask={"99.999.999/9999-99"}
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
@@ -356,11 +358,12 @@ function Fornecedor() {
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="telefone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Telefone</label>
-                                    <input
+                                    <InputMask
                                         type="text"
                                         name="telefone"
                                         onChange={(e) => setCreateForn({ ...createForn, Telefone: e.target.value })}
                                         id="telefone"
+                                        mask={"(99)99999-9999"}
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required

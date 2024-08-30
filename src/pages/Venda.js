@@ -88,7 +88,7 @@ function Venda() {
         setSelectedProd((prevState) => ({
             ...prevState,
             QtdProduto: novaQtd,
-            ValorTotal: novoValorTotal,
+            ValorTotal: (novoValorTotal.toFixed(2)),
         }));
     };
 
@@ -437,7 +437,7 @@ function Venda() {
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.NomeProduto}</td>
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.QtdProduto}</td>
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.Preco.toFixed(2)}$</td>
-                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.ValorTotal.toFixed(2)}$</td>
+                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.ValorTotal}$</td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -518,7 +518,7 @@ function Venda() {
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.IdProduto}</td>
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.NomeProduto}</td>
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Descricao}</td>
-                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Preco}</td>
+                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{(prod.Preco).toFixed(2)}</td>
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.UnidMedida}</td>
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Estoque}</td>
                                         <td className="p-4 space-x-2 whitespace-nowrap">
@@ -580,7 +580,7 @@ function Venda() {
                                     <input
                                         type="number"
                                         name="ValorUnitario"
-                                        value={selectedProd.Preco}
+                                        value={(selectedProd.Preco.toFixed(2))}
                                         onChange={(e) => setSelectedProd({ ...selectedProd, Preco: e.target.value })}
                                         id="cliente"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -594,7 +594,7 @@ function Venda() {
                                         type="number"
                                         name="ValorTotal"
                                         value={selectedProd.ValorTotal}
-                                        id="cliente"
+                                        id="ValorTotal"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required

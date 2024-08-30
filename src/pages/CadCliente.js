@@ -2,6 +2,7 @@ import Menu from '../components/Menu';
 import { useEffect, useState, useCallback } from "react";
 import API from "../utils/api";
 import Modal from "../components/Modal";
+import InputMask from 'react-input-mask';
 
 function Cliente() {
     const [deletModalOpen, setDeletModalOpen] = useState(false);
@@ -15,10 +16,12 @@ function Cliente() {
     const [users, setUsers] = useState([]);
     const [tot, setTot] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [createUser, setCreateUser] = useState(null);
+    const [createUser, setCreateUser] = useState({ CPFouCNPJ: '' });
 
     const [nextPage, setNextPage] = useState();
     const [previousPage, setPreviousPage] = useState();
+
+    const [isCNPJ, setIsCNPJ] = useState(false);
 
     const nextItems = async () => {
         try {
@@ -33,7 +36,7 @@ function Cliente() {
             console.error('Erro ao carregar itens:', error);
         }
     };
-    
+
     const previousItems = async () => {
         try {
             const response = await fetch(`${previousPage}`);
@@ -245,13 +248,13 @@ function Cliente() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="cpf" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CPFouCNPJ</label>
+                                    <label htmlFor="CPFouCNPJ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CPF/CNPJ</label>
                                     <input
                                         type="text"
-                                        name="cpf"
+                                        name="CPFouCNPJ"
                                         value={selectedUser.CPFouCNPJ}
                                         onChange={(e) => setSelectedUser({ ...selectedUser, CPFouCNPJ: e.target.value })}
-                                        id="cpf"
+                                        id="CPFouCNPJ"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
@@ -340,24 +343,36 @@ function Cliente() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="cpf" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CPF/CNPJ</label>
-                                    <input
+                                    {/* <label htmlFor="CPFouCNPJ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CPF/CNPJ</label> */}
+                                    <div className="mb-1">
+                                        <label className="mr-4 text-sm font-medium text-gray-900 dark:text-black">
+                                            <input type="radio" name="documentType" checked={!isCNPJ} onChange={() => setIsCNPJ(false)} />
+                                            CPF
+                                        </label>
+                                        <label className="text-sm font-medium text-gray-900 dark:text-black">
+                                            <input type="radio" name="documentType" checked={isCNPJ} onChange={() => setIsCNPJ(true)} />
+                                            CNPJ
+                                        </label>
+                                    </div>
+                                    <InputMask
                                         type="text"
-                                        name="cpf"
+                                        name="CPFouCNPJ"
                                         onChange={(e) => setCreateUser({ ...createUser, CPFouCNPJ: e.target.value })}
-                                        id="cpf"
+                                        id="CPFouCNPJ"
+                                        mask={isCNPJ ? '99.999.999/9999-99' : '999.999.999-99'}
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
                                     />
                                 </div>
+
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Email</label>
+                                    <label htmlFor="Email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Email</label>
                                     <input
-                                        type="email"
-                                        name="email"
+                                        type="Email"
+                                        name="Email"
                                         onChange={(e) => setCreateUser({ ...createUser, Email: e.target.value })}
-                                        id="email"
+                                        id="Email"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
@@ -365,47 +380,48 @@ function Cliente() {
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="telefone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Telefone</label>
-                                    <input
+                                    <InputMask
                                         type="text"
                                         name="telefone"
                                         onChange={(e) => setCreateUser({ ...createUser, Telefone: e.target.value })}
                                         id="telefone"
+                                        mask="(99)99999-9999"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="endereco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Endereço</label>
+                                    <label htmlFor="NomeRua" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Endereço</label>
                                     <input
                                         type="text"
-                                        name="endereco"
+                                        name="NomeRua"
                                         onChange={(e) => setCreateUser({ ...createUser, NomeRua: e.target.value })}
-                                        id="endereco"
+                                        id="NomeRua"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="numero" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Número</label>
+                                    <label htmlFor="Numero" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Número</label>
                                     <input
                                         type="text"
-                                        name="numero"
+                                        name="Numero"
                                         onChange={(e) => setCreateUser({ ...createUser, Numero: e.target.value })}
-                                        id="numero"
+                                        id="Numero"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="bairro" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Bairro</label>
+                                    <label htmlFor="NomeBairro" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Bairro</label>
                                     <input
                                         type="text"
-                                        name="bairro"
+                                        name="NomeBairro"
                                         onChange={(e) => setCreateUser({ ...createUser, NomeBairro: e.target.value })}
-                                        id="bairro"
+                                        id="NomeBairro"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
