@@ -5,8 +5,8 @@ import Cliente from "./pages/CadCliente";
 import Fornecedor from './pages/CadFornecedor';
 import Produto from './pages/CadProduto';
 import Venda from './pages/Venda';
-import Modal from './components/Modal';
 import Receber from './pages/CadReceber';
+import Compra from './pages/Compra';
 
 function App() {
   return (
@@ -18,8 +18,8 @@ function App() {
           <Route path="/CadFornecedor" element={<Fornecedor />}></Route>
           <Route path="/CadProduto" element={<Produto />}></Route>
           <Route path="/Venda" element={<Venda />}></Route>
-          <Route path="/Modal" element={<Modal />}></Route>
           <Route path="/CadReceber" element={<Receber />}></Route>
+          <Route path="/Compra" element={<Compra />}></Route>
         </Routes>
     </BrowserRouter>
   );

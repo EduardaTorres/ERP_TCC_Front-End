@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 function Menu() {
@@ -18,9 +17,9 @@ function Menu() {
                     <Link to="/CadProduto" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
                         Produto
                     </Link>
-                    <a href="#responsive-header" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
+                    <Link to="/Compra" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
                         Compra
-                    </a>
+                    </Link>
                     <Link to="/Venda" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
                         Venda
                     </Link>
