@@ -19,6 +19,35 @@ function Fornecedor() {
     const [selectedForn, setSelectedForn] = useState(null);
     const [createForn, setCreateForn] = useState(null);
 
+    const [nextPage, setNextPage] = useState();
+    const [previousPage, setPreviousPage] = useState();
+
+    const nextItems = async () => {
+        try {
+            const response = await fetch(`${nextPage}`);
+            const data = await response.json();
+            setForns(data.results);
+            setNextPage(data.next)
+            setPreviousPage(data.previous)
+            console.log(data.next)
+            console.log(data.previous)
+        } catch (error) {
+            console.error('Erro ao carregar itens:', error);
+        }
+    };
+
+    const previousItems = async () => {
+        try {
+            const response = await fetch(`${previousPage}`);
+            const data = await response.json();
+            setForns(data.results);
+            setNextPage(data.next)
+            setPreviousPage(data.previous)
+        } catch (error) {
+            console.error('Erro ao carregar itens:', error);
+        }
+    };
+
     const handleFornChange = (fornId) => {
         const forn = forns.find(f => f.IdFornecedor === fornId);
         setSelectedForn(forn);
@@ -31,6 +60,8 @@ function Fornecedor() {
             if (data && data.results) {
                 setTot(data.count)
                 setForns(data.results);
+                setNextPage(data.next)
+                setPreviousPage(data.previous)
             }
         } catch (error) {
             console.error('Erro ao buscar os usuários:', error);
@@ -166,19 +197,19 @@ function Fornecedor() {
                 </div>
             </div>
 
-            <div class="sticky bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-cyan-800 dark:border-gray-700">
+            <div class="st bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-cyan-800 dark:border-gray-700">
                 <div class="flex items-center mb-4 sm:mb-0">
                     <span class="text-sm font-normal text-gray-500 dark:text-white">Total de fornecedores <span class="font-semibold text-gray-900 dark:text-white">{tot}</span></span>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <a href=" " class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    <button onClick={previousItems} disabled={previousPage === null} class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         <svg class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                         Anterior
-                    </a>
-                    <a href=" " class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    </button >
+                    <button onClick={nextItems} disabled={nextPage === null} class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         Próxima
                         <svg class="w-5 h-5 ml-1 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
-                    </a>
+                    </button >
                 </div>
             </div>
 
@@ -432,11 +463,11 @@ function Fornecedor() {
                             <h3 class="mt-5 mb-6 text-lg text-white dark:text-white">Tem certeza de que deseja excluir este fornecedor? </h3>
                         )}
 
-                        <button onClick={deletForn} class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
+                        <button onClick={ () => {deletForn(); setSelectedForn(null)}} class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
                             Sim, tenho certeza
                         </button>
 
-                        <button onClick={deletCloseModal} class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-forn-modal">
+                        <button onClick={ () => {deletCloseModal(); setSelectedForn(null)}} class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-forn-modal">
                             Não, cancelar
                         </button>
                     </div>
