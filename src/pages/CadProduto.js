@@ -26,6 +26,18 @@ function Produto() {
         setSelectedProd(prod);
     };
 
+    const handlePrecoChange = (e) => {
+        let value = e.target.value;
+
+        // Remove qualquer caractere que não seja número ou ponto
+        value = value.replace(/[^0-9.]/g, '');
+
+        // Converte para número e formata com duas casas decimais usando toFixed(2)
+        const formattedValue = value ? parseFloat(value).toFixed(2) : '';
+
+        setCreateProd({ ...createProd, Preco: formattedValue });
+    };
+
     const nextItems = async () => {
         try {
             const response = await fetch(`${nextPage}`);
@@ -255,7 +267,7 @@ function Produto() {
                                     <input
                                         type="text"
                                         name="preco"
-                                        value={(selectedProd.Preco.toFixed(2))}
+                                        value={(selectedProd.Preco).toFixed(2)}
                                         onChange={(e) => setSelectedProd({ ...selectedProd, Preco: e.target.value })}
                                         id="preco"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
@@ -348,7 +360,7 @@ function Produto() {
                                     <input
                                         type="number"
                                         name="estoque"
-                                        onChange={(e) => setSelectedProd({ ...selectedProd, Estoque: e.target.value })}
+                                        onChange={(e) => setCreateProd({ ...createProd, Estoque: e.target.value })}
                                         id="estoque"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
@@ -381,11 +393,11 @@ function Produto() {
                             <h3 class="mt-5 mb-6 text-lg text-white dark:text-white">Tem certeza de que deseja excluir este produto? </h3>
                         )}
 
-                        <button onClick={() => {deletProd(); setSelectedProd(null)}} class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
+                        <button onClick={() => { deletProd(); setSelectedProd(null) }} class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
                             Sim, tenho certeza
                         </button>
 
-                        <button onClick={() => {deletCloseModal(); setSelectedProd(null)}} class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-prod-modal">
+                        <button onClick={() => { deletCloseModal(); setSelectedProd(null) }} class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-prod-modal">
                             Não, cancelar
                         </button>
                     </div>
