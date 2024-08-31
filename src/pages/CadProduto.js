@@ -26,18 +26,6 @@ function Produto() {
         setSelectedProd(prod);
     };
 
-    const handlePrecoChange = (e) => {
-        let value = e.target.value;
-
-        // Remove qualquer caractere que não seja número ou ponto
-        value = value.replace(/[^0-9.]/g, '');
-
-        // Converte para número e formata com duas casas decimais usando toFixed(2)
-        const formattedValue = value ? parseFloat(value).toFixed(2) : '';
-
-        setCreateProd({ ...createProd, Preco: formattedValue });
-    };
-
     const nextItems = async () => {
         try {
             const response = await fetch(`${nextPage}`);
