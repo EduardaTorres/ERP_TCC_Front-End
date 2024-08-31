@@ -10,8 +10,8 @@ const Footer = () => {
           <div className="text-sm">
             © Nosso TCC 2024.
           </div>
-          <div className="space-x-4">
-            <a href=" " className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">Sobre</a>
+          <div className="space-x-4 mr-4">
+            <a href=" " className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black">Sobre</a>
             <a href=" " className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">Contato</a>
             <a href=" " className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">Privacidade</a>
             <a href=" " className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
