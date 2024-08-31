@@ -26,7 +26,7 @@ function Menu() {
                     <Link to="/CadReceber" className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
                         Conta Receber
                     </Link>
-                    <Link to="#responsive-header" className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
+                    <Link to="/CadPagar" className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
                         Conta Pagar
                     </Link>
                 </div>

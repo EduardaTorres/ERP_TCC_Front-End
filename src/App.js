@@ -7,6 +7,7 @@ import Produto from './pages/CadProduto';
 import Venda from './pages/Venda';
 import Receber from './pages/CadReceber';
 import Compra from './pages/Compra';
+import Pagar from './pages/CadPagar';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/CadProduto" element={<Produto />}></Route>
           <Route path="/Venda" element={<Venda />}></Route>
           <Route path="/CadReceber" element={<Receber />}></Route>
+          <Route path="/CadPagar" element={<Pagar />}></Route>
           <Route path="/Compra" element={<Compra />}></Route>
         </Routes>
     </BrowserRouter>

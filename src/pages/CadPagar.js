@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useContext } from "react";
 import API from "../utils/api";
 import Menu from "../components/Menu";
 
-function Compra() {
+function Pagar() {
 
     return (
         <div>
@@ -11,7 +11,7 @@ function Compra() {
             <div className="sticky top-14 right-0 w-full p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 dark:bg-white dark:border-white">
                 <div className="w-full mb-1">
                     <div className="mb-5">
-                        <h1 className="text-2xl font-semibold text-gray-200 sm:text-2xl dark:text-black">Compra</h1>
+                        <h1 className="text-2xl font-semibold text-gray-200 sm:text-2xl dark:text-black">Contas a Pagar</h1>
                     </div>
                     <div className="sm:flex">
                         <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-100">
@@ -42,4 +42,4 @@ function Compra() {
     )
 }
 
-export default Compra;
+export default Pagar;
