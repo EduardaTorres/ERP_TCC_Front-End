@@ -249,35 +249,35 @@ function Venda() {
                 </div>
             </div>
 
-            <div class="sticky bottom-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-cyan-800 dark:border-gray-700">
-                <div class="flex items-center mb-4 sm:mb-0">
-                    <span class="text-sm font-normal text-gray-500 dark:text-white">Total de vendas <span class="font-semibold text-gray-900 dark:text-white">{tot}</span></span>
+            <div className="sticky bottom-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-cyan-800 dark:border-gray-700">
+                <div className="flex items-center mb-4 sm:mb-0">
+                    <span className="text-sm font-normal text-gray-500 dark:text-white">Total de vendas <span className="font-semibold text-gray-900 dark:text-white">{tot}</span></span>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <a href=" " class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                        <svg class="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                <div className="flex items-center space-x-3">
+                    <a href=" " className="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        <svg className="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
                         Anterior
                     </a>
-                    <a href=" " class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    <a href=" " className="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                         Próxima
-                        <svg class="w-5 h-5 ml-1 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <svg className="w-5 h-5 ml-1 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
                     </a>
                 </div>
             </div>
 
             <Modal isOpen={isModalOpen} onClose={() => { closeModal(); setSelectedVend(null); setCreateVend(null); setAddProdVenda([]); setSelectedUser(null); setParcelas(); setPrazo(''); setFormaPagamento('') }}>
                 {selectedVend ? (
-                    <div class="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
-                        <h3 class="text-xl font-semibold dark:text-white">
+                    <div className="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
+                        <h3 className="text-xl font-semibold dark:text-white">
                             Visualizar Venda
                         </h3>
-                    </div>) : (<div class="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
-                        <h3 class="text-xl font-semibold dark:text-white">
+                    </div>) : (<div className="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
+                        <h3 className="text-xl font-semibold dark:text-white">
                             Adicionar Venda
                         </h3>
                     </div>)}
                 {/* <!-- Modal body --> */}
-                <div class="p-6 space-y-6">
+                <div className="p-6 space-y-6">
                     {selectedVend ? (
                         <form action=" ">
                             <div className="grid grid-cols-6 gap-6 ">
@@ -477,12 +477,12 @@ function Venda() {
                 </div>
                 {/* <!-- Modal footer --> */}
                 {selectedVend ?
-                    (<div class="items-center p-8 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                    (<div className="items-center p-8 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
 
                     </div>)
                     :
-                    (<div class="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
-                        <button onClick={handleSubmit} class="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="submit">
+                    (<div className="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                        <button onClick={handleSubmit} className="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="submit">
                             Salvar Venda
                         </button>
                         <button type="button" onClick={openProdModal} className="float-end text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
@@ -493,8 +493,8 @@ function Venda() {
             </Modal>
 
             <Modal isOpen={isModalProdOpen} onClose={() => { closeProdModal() }}>
-                <div class="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
-                    <h3 class="text-xl font-semibold dark:text-white">
+                <div className="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
+                    <h3 className="text-xl font-semibold dark:text-white">
                         Produtos
                     </h3>
                 </div>
@@ -534,14 +534,14 @@ function Venda() {
                         )}
                     </table>
                 </div>
-                <div class="items-center p-7 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                <div className="items-center p-7 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
 
                 </div>
             </Modal>
 
             <Modal isOpen={isModalProdQtdOpen} onClose={() => { closeProdQtdModal() }}>
-                <div class="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
-                    <h3 class="text-xl font-semibold dark:text-white">
+                <div className="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
+                    <h3 className="text-xl font-semibold dark:text-white">
                         Produto
                     </h3>
                 </div>
@@ -605,8 +605,8 @@ function Venda() {
                         </form>
                     </div>
                 </div>
-                <div onClick={() => { adicionarProduto(); closeProdQtdModal() }} class="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
-                    <button class="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="submit">
+                <div onClick={() => { adicionarProduto(); closeProdQtdModal() }} className="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                    <button className="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="submit">
                         Adicionar Produto
                     </button>
                 </div>
