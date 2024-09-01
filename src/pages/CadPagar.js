@@ -1,8 +1,71 @@
 import { useEffect, useState, useCallback, useContext } from "react";
 import API from "../utils/api";
 import Menu from "../components/Menu";
+import Modal from "../components/Modal";
 
 function Pagar() {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
+    const [contaPagar, setContaPagar] = useState([])
+    const [selectedContaP, setSelectedContaP] = useState(null);
+    const [tot, setTot] = useState([])
+
+    const [nextPage, setNextPage] = useState();
+    const [previousPage, setPreviousPage] = useState();
+
+    const nextItems = async () => {
+        try {
+            const response = await fetch(`${nextPage}`);
+            const data = await response.json();
+            setContaPagar(data.results);
+            setNextPage(data.next)
+            setPreviousPage(data.previous)
+            console.log(data.next)
+            console.log(data.previous)
+        } catch (error) {
+            console.error('Erro ao carregar itens:', error);
+        }
+    };
+    
+    const previousItems = async () => {
+        try {
+            const response = await fetch(`${previousPage}`);
+            const data = await response.json();
+            setContaPagar(data.results);
+            setNextPage(data.next)
+            setPreviousPage(data.previous)
+        } catch (error) {
+            console.error('Erro ao carregar itens:', error);
+        }
+    };
+
+    const handleContaPChange = (contId) => {
+        const contaApagar = contaPagar.find(r => r.compra.IdCompra === contId);
+        setSelectedContaP(contaApagar);
+        console.log(contaApagar);
+    };
+
+    const getContaPagar = useCallback(async () => {
+        try {
+            const { data } = await API.get('/contas-pagar/')
+
+            if (data && data.results) {
+                setTot(data.count)
+                setContaPagar(data.results)
+                setNextPage(data.next)
+                setPreviousPage(data.previous)
+            }
+        } catch (error) {
+            console.error(console.error('Erro ao buscar as conta a pagar:', error))
+        }
+    }, [])
+
+    useEffect(() => {
+        getContaPagar()
+    }, [getContaPagar])
 
     return (
         <div>
@@ -28,15 +91,148 @@ function Pagar() {
                                 </div>
                             </form>
                         </div>
-                        <div className="flex items-center ml-auto space-x-2 sm:space-x-3">
-                            <button type="button" className="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-cyan-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                                <svg className="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd"></path></svg>
-                                Adicionar
-                            </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex flex-col">
+                <div className="overflow-x-auto">
+                    <div className="inline-block min-w-full align-middle">
+                        <div className="overflow-hidden shadow">
+                            <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
+                                <thead className="bg-gray-100 dark:bg-cyan-800">
+                                    <tr>
+                                        <th scope="col" className="p-4">
+                                            <div className="flex items-center">
+                                                <input id="checkbox-all" aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
+                                                <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
+                                            </div>
+                                        </th>
+                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">ID</th>
+                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Nome</th>
+                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Data da compra</th>
+                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Forma de pagamento</th>
+                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">qtd parcelas</th>
+                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Ação</th>
+                                    </tr>
+                                </thead>
+                                {contaPagar.length > 0 ? (
+                                    <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
+                                        {contaPagar.map((cont) => (
+                                            <tr key={cont.compra.IdCompra} className="hover:bg-gray-100 dark:hover:bg-gray-200">
+                                                <td className="w-4 p-4">
+                                                    <div className="flex items-center">
+                                                        <input
+                                                            id={`checkbox-${cont.compra.IdCompra}`}
+                                                            aria-describedby="checkbox-1"
+                                                            type="checkbox"
+                                                            className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+                                                        />
+                                                        <label htmlFor={`checkbox-${cont.compra.IdCompra}`} className="sr-only">checkbox</label>
+                                                    </div>
+                                                </td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.compra.IdCompra}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.compra.IdFornecedor.NomeJuridico}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.compra.DataCompra}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.compra.FormaPagamento}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.compra.Parcelas}</td>
+                                                <td className="p-4 space-x-2 whitespace-nowrap">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => { handleContaPChange(cont.compra.IdCompra); openModal(); }}
+                                                        className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-cyan-800 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                                    >
+                                                        <svg className="w-4 h-4 mr-2" fill="currentColor"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                                                            <path
+                                                                fillRule="evenodd"
+                                                                d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                                                                clipRule="evenodd"
+                                                            ></path>
+                                                        </svg>
+                                                        Visualizar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>) : (
+                                    <tr>
+                                        <td colSpan="8" className="p-4 text-center">Nenhuma conta a pagar encontrada</td>
+                                    </tr>
+                                )}
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div className="st bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-cyan-800 dark:border-gray-700">
+                <div className="flex items-center mb-4 sm:mb-0">
+                    <span className="text-sm font-normal text-gray-500 dark:text-white">Total de Contas <span className="font-semibold text-gray-900 dark:text-white">{tot}</span></span>
+                </div>
+                <div className="flex items-center space-x-3">
+                    <button onClick={previousItems} disabled={previousPage === null} className="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        <svg className="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+                        Anterior
+                    </button >
+                    <button onClick={nextItems} disabled={nextPage === null} className="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        Próxima
+                        <svg className="w-5 h-5 ml-1 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+                    </button >
+                </div>
+            </div>
+
+            <Modal isOpen={isModalOpen} onClose={() => closeModal()}>
+                <div className="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
+                    <h3 className="text-xl font-semibold dark:text-white">
+                        Valores a pagar
+                    </h3>
+                </div>
+                <div>
+                    {selectedContaP ? (
+                        <div className="m-5">
+                            <div className="overflow-x-auto max-h-80">
+                                <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
+                                    <thead>
+                                        <tr>
+                                            <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Valor</th>
+                                            <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Data de compra</th>
+                                            <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
+                                        {selectedContaP.parcelas.map((parcela, idx) => (
+                                            <tr key={idx} className="hover:bg-gray-100 dark:hover:bg-gray-200">
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.Valor} $</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.DataVencimento}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.Status ? 'Pago' : 'Pendente'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
+                                <div className="flex justify-end p-4">
+                                    <span className="font-medium text-gray-700">Sub-Total:</span>
+                                    <span className="pl-2 text-gray-500">{(selectedContaP.compra.ValorTotal).toFixed(2)}$</span>
+                                </div>
+                                <div className="flex justify-end p-4 font-bold text-gray-700">
+                                    <span>Total:</span>
+                                    <span className="pl-2 text-gray-500">{(selectedContaP.compra.ValorTotal).toFixed(2)}$</span>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>
+                            <p>Erro ao carregar os dados.</p>
+                        </div>
+                    )}
+                </div>
+                <div className="items-center p-5 border-t  border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                    <button className="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="submit">Salvar Alteração</button>
+                </div>
+            </Modal>
+
+
 
         </div>
     )
