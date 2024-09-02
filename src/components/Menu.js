@@ -31,7 +31,9 @@ function Menu() {
                     </Link>
                 </div>
                 <div>
-                    <a href=" " className="inline-block text-sm px-4 py-2 leading-none border rounded-lg text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Sair</a>
+                    <Link to="/" className="inline-block text-sm px-4 py-2 leading-none border rounded-lg text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">
+                        Sair
+                    </Link>
                 </div>
             </div>
         </nav>
