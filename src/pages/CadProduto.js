@@ -135,18 +135,12 @@ function Produto() {
                         <div className="overflow-hidden shadow">
                             <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
                                 <thead className="bg-gray-100 dark:bg-cyan-800">
-                                    <tr>
-                                        <th scope="col" className="p-4">
-                                            <div className="flex items-center">
-                                                <input id="checkbox-all" aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
-                                            </div>
-                                        </th>
+                                    <tr>                                   
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">ID</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Nome</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Descrição</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Preço</th>
-                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Unidade Medida</th>
+                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Uni.Medida</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Estoque</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Ação</th>
                                     </tr>
@@ -154,13 +148,7 @@ function Produto() {
                                 {prods.length > 0 ? (
                                     <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                         {prods.map((prod) => (
-                                            <tr key={prod.IdProduto} className="hover:bg-gray-100 dark:hover:bg-gray-200">
-                                                <td className="w-4 p-4">
-                                                    <div className="flex items-center">
-                                                        <input id="checkbox-{{ prod.IdProduto }}" aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                        <label htmlFor="checkbox-{{ prod.IdProduto }}" className="sr-only">checkbox</label>
-                                                    </div>
-                                                </td>
+                                            <tr key={prod.IdProduto} className="hover:bg-gray-100 dark:hover:bg-gray-200">                                             
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.IdProduto}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.NomeProduto}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Descricao}</td>

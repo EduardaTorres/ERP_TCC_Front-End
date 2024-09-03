@@ -233,12 +233,6 @@ function Venda() {
                             <table className="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead className="bg-gray-100 dark:bg-cyan-800">
                                     <tr>
-                                        <th scope="col" className="p-4">
-                                            <div className="flex items-center">
-                                                <input id="checkbox-all" aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
-                                            </div>
-                                        </th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">ID</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Cliente</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Data</th>
@@ -249,13 +243,7 @@ function Venda() {
                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700 overflow-y-auto" style={{ maxHeight: '300px' }}>
                                     {vends.length > 0 ? (
                                         vends.map((vend) => (
-                                            <tr key={vend.IdVenda} className="hover:bg-gray-100 dark:hover:bg-gray-200">
-                                                <td className="w-4 p-4">
-                                                    <div className="flex items-center">
-                                                        <input id={`checkbox-${vend.IdVenda}`} aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                        <label htmlFor={`checkbox-${vend.IdVenda}`} className="sr-only">checkbox</label>
-                                                    </div>
-                                                </td>
+                                            <tr key={vend.IdVenda} className="hover:bg-gray-100 dark:hover:bg-gray-200">                                              
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.IdVenda}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.IdCliente.NomePessoa}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.DataVenda}</td>
@@ -295,7 +283,6 @@ function Venda() {
                     </button >
                 </div>
             </div>
-
 
             <Modal isOpen={isModalOpen} onClose={() => { closeModal(); setSelectedVend(null); setCreateVend(null); setAddProdVenda([]); setSelectedUser(null); setParcelas(); setPrazo(''); setFormaPagamento('') }}>
                 {selectedVend ? (

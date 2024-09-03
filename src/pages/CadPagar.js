@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useContext } from "react";
+import { useEffect, useState, useCallback } from "react";
 import API from "../utils/api";
 import Menu from "../components/Menu";
 import Modal from "../components/Modal";
@@ -102,12 +102,6 @@ function Pagar() {
                             <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
                                 <thead className="bg-gray-100 dark:bg-cyan-800">
                                     <tr>
-                                        <th scope="col" className="p-4">
-                                            <div className="flex items-center">
-                                                <input id="checkbox-all" aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
-                                            </div>
-                                        </th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">ID</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Nome</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Data da compra</th>
@@ -119,18 +113,7 @@ function Pagar() {
                                 {contaPagar.length > 0 ? (
                                     <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                         {contaPagar.map((cont) => (
-                                            <tr key={cont.compra.IdCompra} className="hover:bg-gray-100 dark:hover:bg-gray-200">
-                                                <td className="w-4 p-4">
-                                                    <div className="flex items-center">
-                                                        <input
-                                                            id={`checkbox-${cont.compra.IdCompra}`}
-                                                            aria-describedby="checkbox-1"
-                                                            type="checkbox"
-                                                            className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
-                                                        />
-                                                        <label htmlFor={`checkbox-${cont.compra.IdCompra}`} className="sr-only">checkbox</label>
-                                                    </div>
-                                                </td>
+                                            <tr key={cont.compra.IdCompra} className="hover:bg-gray-100 dark:hover:bg-gray-200">                                           
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.compra.IdCompra}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.compra.IdFornecedor.NomeJuridico}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.compra.DataCompra}</td>
@@ -231,9 +214,6 @@ function Pagar() {
                     <button className="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="submit">Salvar Alteração</button>
                 </div>
             </Modal>
-
-
-
         </div>
     )
 }

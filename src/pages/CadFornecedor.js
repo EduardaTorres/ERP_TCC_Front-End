@@ -136,13 +136,7 @@ function Fornecedor() {
                         <div className="overflow-hidden shadow">
                             <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
                                 <thead className="bg-gray-100 dark:bg-cyan-800">
-                                    <tr>
-                                        <th scope="col" className="p-4">
-                                            <div className="flex items-center">
-                                                <input id="checkbox-all" aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
-                                            </div>
-                                        </th>
+                                    <tr>                                   
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">ID</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Razão Social</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Nome Fantasia</th>
@@ -158,13 +152,7 @@ function Fornecedor() {
                                 {forns.length > 0 ? (
                                     <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                         {forns.map((forn) => (
-                                            <tr key={forn.IdFornecedor} className="hover:bg-gray-100 dark:hover:bg-gray-200">
-                                                <td className="w-4 p-4">
-                                                    <div className="flex items-center">
-                                                        <input id="checkbox-{{ forn.IdFornecedor }}" aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                        <label htmlFor="checkbox-{{ forn.IdFornecedor }}" className="sr-only">checkbox</label>
-                                                    </div>
-                                                </td>
+                                            <tr key={forn.IdFornecedor} className="hover:bg-gray-100 dark:hover:bg-gray-200">                                      
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{forn.IdFornecedor}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{forn.NomeJuridico}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{forn.NomeFantasia}</td>

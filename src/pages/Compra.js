@@ -243,12 +243,6 @@ function Compra() {
                             <table className="min-w-full table-fixed divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead className="bg-gray-100 dark:bg-cyan-800">
                                     <tr>
-                                        <th scope="col" className="p-4">
-                                            <div className="flex items-center">
-                                                <input id="checkbox-all" aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
-                                            </div>
-                                        </th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">ID</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Fornecedor</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Data</th>
@@ -259,13 +253,7 @@ function Compra() {
                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700 overflow-y-auto" style={{ maxHeight: '300px' }}>
                                     {comps.length > 0 ? (
                                         comps.map((comp) => (
-                                            <tr key={comp.IdCompra} className="hover:bg-gray-100 dark:hover:bg-gray-200">
-                                                <td className="w-4 p-4">
-                                                    <div className="flex items-center">
-                                                        <input id={`checkbox-${comp.IdCompra}`} aria-describedby="checkbox-1" type="checkbox" className="w-4 h-4 bg-gray-100 border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"></input>
-                                                        <label htmlFor={`checkbox-${comp.IdCompra}`} className="sr-only">checkbox</label>
-                                                    </div>
-                                                </td>
+                                            <tr key={comp.IdCompra} className="hover:bg-gray-100 dark:hover:bg-gray-200">                                            
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.IdCompra}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.IdFornecedor.NomeJuridico}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.DataCompra}</td>
@@ -426,8 +414,7 @@ function Compra() {
                                     <select
                                         value={formaPagamento}
                                         onChange={handleFormaPagamentoChange}
-                                        className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2"
-                                    >
+                                        className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2">
                                         <option value="">Selecione uma opção</option>
                                         <option value="À vista">À Vista</option>
                                         <option value="A prazo">A Prazo</option>
