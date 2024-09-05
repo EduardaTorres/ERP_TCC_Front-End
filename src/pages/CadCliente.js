@@ -2,9 +2,16 @@ import Menu from '../components/Menu';
 import { useEffect, useState, useCallback } from "react";
 import API from "../utils/api";
 import Modal from "../components/Modal";
+import ModalError from '../components/ModalError';
 import InputMask from 'react-input-mask';
 
 function Cliente() {
+    const [modalErrorOpen, setModalErrorOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState([]);
+
+    const modalErrorOpenModal = () => setModalErrorOpen(true);
+    const modalErrorCloseModal = () => setModalErrorOpen(false);
+
     const [deletModalOpen, setDeletModalOpen] = useState(false);
     const deletOpenModal = () => setDeletModalOpen(true);
     const deletCloseModal = () => setDeletModalOpen(false);
@@ -71,21 +78,48 @@ function Cliente() {
 
     const addUser = async () => {
         try {
-            await API.post('/cliente/create/', createUser);
-            getUsers();
-            closeModal();
+          await API.post('/cliente/create/', createUser);
+          getUsers();
+          closeModal();
+    
+          setErrorMessage('');
         } catch (error) {
-            console.error('Erro ao adicionar o usuário:', error);
+          if (error.response) {
+            const errorData = error.response.data;
+            
+            const errorMessage = JSON.stringify(errorData, null, 2); 
+            
+            setErrorMessage(errorMessage);
+          } else {
+            setErrorMessage('Erro ao adicionar o usuário. Tente novamente.');
+          }
+    
+          console.error(errorMessage, error);
+          modalErrorOpenModal();
         }
-    };
+      };
+    
 
     const updateUser = async () => {
         try {
             await API.put(`/cliente/update/${selectedUser.IdPessoa}`, selectedUser);
             getUsers();
             closeModal();
+
+            setErrorMessage('');
         } catch (error) {
-            console.error('Erro ao atualizar o usuário:', error);
+            if (error.response) {
+                const errorData = error.response.data;
+                
+                const errorMessage = JSON.stringify(errorData, null, 2); 
+                
+                setErrorMessage(errorMessage);
+              } else {
+                setErrorMessage('Erro ao editar o usuário. Tente novamente.');
+              }
+        
+              console.error(errorMessage, error);
+              modalErrorOpenModal();
         }
     };
 
@@ -442,7 +476,7 @@ function Cliente() {
                             <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">Tem certeza de que deseja excluir este cliente? </h3>
                         )}
 
-                        <button onClick={ () => {deletUser(); setSelectedUser(null)}} className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
+                        <button onClick={() => { deletUser(); setSelectedUser(null) }} className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-800">
                             Sim, tenho certeza
                         </button>
 
@@ -451,8 +485,19 @@ function Cliente() {
                         </button>
                     </div>
                 </div>
-
             </Modal>
+
+            <ModalError isOpen={modalErrorOpen} onClose={modalErrorCloseModal}>
+                <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="p-10 pt-10 text-center">
+                        <svg className="w-16 h-16 mx-auto text-red-600" fillRule="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">{errorMessage}</h3>
+                        <button onClick={ modalErrorCloseModal } className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </ModalError>
         </div >
     )
 }
