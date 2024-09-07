@@ -83,6 +83,7 @@ function Cliente() {
           closeModal();
     
           setErrorMessage('');
+          console.log(createUser)
         } catch (error) {
           if (error.response) {
             const errorData = error.response.data;
@@ -298,12 +299,13 @@ function Cliente() {
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="telefone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Telefone</label>
-                                    <input
+                                    <InputMask
                                         type="text"
                                         name="telefone"
                                         value={selectedUser.Telefone}
                                         onChange={(e) => setSelectedUser({ ...selectedUser, Telefone: e.target.value })}
                                         id="telefone"
+                                        mask="(99)99999-9999"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required

@@ -4,8 +4,14 @@ import Menu from "../components/Menu";
 import Modal from "../components/Modal";
 import FornCombobox from "../components/FornCombobox";
 import { FornContext } from '../context/FornContext';
+import ModalError from "../components/ModalError";
 
 function Compra() {
+    const [modalErrorOpen, setModalErrorOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState([]);
+
+    const modalErrorOpenModal = () => setModalErrorOpen(true);
+    const modalErrorCloseModal = () => setModalErrorOpen(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
@@ -22,7 +28,7 @@ function Compra() {
     const [comps, setComps] = useState([]);
     const [tot, setTot] = useState([]);
     const [selectedComp, setSelectedComp] = useState(null);
-    const [createComp, setCreateComp] = useState(null);
+    const [createComp, setCreateComp] = useState('');
     const { selectedForn, setSelectedForn } = useContext(FornContext);
     const [prods, setProds] = useState([]);
     const [addProdComp, setAddProdComp] = useState([]);
@@ -113,24 +119,27 @@ function Compra() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const compData = {
-            "IdFornecedor": selectedForn.IdFornecedor,
-            "DataCompra": createComp.DataCompra,
-            "ValorTotal": novoValorTotal,
-            "FormaPagamento": formaPagamento,
-            "Prazo": prazo,
-            "Parcelas": parcelas,
-            "itens_compra": addProdComp.map(prod => ({
-                "IdProduto": prod.IdProduto,
-                "NomeProduto": prod.NomeProduto,
-                "QtdProduto": prod.QtdProduto,
-                "ValorUnitario": prod.Preco,
-                "ValorTotal": prod.ValorTotal
-            }))
-        };
-
-        addComp(compData);
+        try {
+            const compData = {
+                "IdFornecedor": selectedForn.IdFornecedor,
+                "DataCompra": createComp.DataCompra,
+                "ValorTotal": novoValorTotal,
+                "FormaPagamento": formaPagamento,
+                "Prazo": prazo,
+                "Parcelas": parcelas,
+                "itens_compra": addProdComp.map(prod => ({
+                    "IdProduto": prod.IdProduto,
+                    "NomeProduto": prod.NomeProduto,
+                    "QtdProduto": prod.QtdProduto,
+                    "ValorUnitario": prod.Preco,
+                    "ValorTotal": prod.ValorTotal
+                }))
+            };
+            addComp(compData);
+        } catch (error) {
+            setErrorMessage('Confira se os campos estão preenchidos')
+            modalErrorOpenModal()
+        }
     };
 
     const [selectedProd, setSelectedProd] = useState({
@@ -168,8 +177,21 @@ function Compra() {
             setPrazo("")
             setParcelas()
             closeModal()
+
+            setErrorMessage('');
         } catch (error) {
-            console.error('Erro ao adicionar venda:', error);
+            if (error.response) {
+                const errorData = error.response.data;
+
+                const errorMessage = JSON.stringify(errorData, null, 2);
+
+                setErrorMessage(errorMessage);
+            } else {
+                setErrorMessage('Erro ao adicionar compra. Tente novamente.');
+            }
+
+            console.error(errorMessage, error);
+            modalErrorOpenModal();
         }
     };
 
@@ -253,7 +275,7 @@ function Compra() {
                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700 overflow-y-auto" style={{ maxHeight: '300px' }}>
                                     {comps.length > 0 ? (
                                         comps.map((comp) => (
-                                            <tr key={comp.IdCompra} className="hover:bg-gray-100 dark:hover:bg-gray-200">                                            
+                                            <tr key={comp.IdCompra} className="hover:bg-gray-100 dark:hover:bg-gray-200">
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.IdCompra}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.IdFornecedor.NomeJuridico}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.DataCompra}</td>
@@ -408,8 +430,8 @@ function Compra() {
                                         required
                                     />
                                 </div>
-                                 {/* Forma de Pagamento */}
-                                 <div className="col-span-6 sm:col-span-2">
+                                {/* Forma de Pagamento */}
+                                <div className="col-span-6 sm:col-span-2">
                                     <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Forma de Pagamento</label>
                                     <select
                                         value={formaPagamento}
@@ -448,7 +470,7 @@ function Compra() {
                                 </div>
                             </div>
                             <div>
-                            {addProdComp.length > 0 ? (
+                                {addProdComp.length > 0 ? (
                                     <>
                                         <div className="overflow-x-auto max-h-80">
                                             <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
@@ -521,7 +543,7 @@ function Compra() {
                     </div>)
                 }
             </Modal>
- 
+
             {/* Modal Produtos */}
             <Modal isOpen={isModalProdOpen} onClose={() => { closeProdModal() }}>
                 <div className="flex items-start justify-between p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
@@ -644,7 +666,17 @@ function Compra() {
                 </div>
             </Modal>
 
-
+            <ModalError isOpen={modalErrorOpen} onClose={modalErrorCloseModal}>
+                <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="p-10 pt-10 text-center">
+                        <svg className="w-16 h-16 mx-auto text-red-600" fillRule="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">{errorMessage}</h3>
+                        <button onClick={modalErrorCloseModal} className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </ModalError>
         </div>
     )
 }

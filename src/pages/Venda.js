@@ -2,10 +2,17 @@ import Menu from "../components/Menu";
 import { useEffect, useState, useCallback, useContext } from "react";
 import API from "../utils/api";
 import Modal from "../components/Modal";
+import ModalError from "../components/ModalError";
 import UserCombobox from "../components/UserCombobox ";
 import { UserContext } from '../context/UserContext';
 
 function Venda() {
+    const [modalErrorOpen, setModalErrorOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState([]);
+
+    const modalErrorOpenModal = () => setModalErrorOpen(true);
+    const modalErrorCloseModal = () => setModalErrorOpen(false);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -82,24 +89,30 @@ function Venda() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        try {
 
-        const vendaData = {
-            "IdCliente": selectedUser.IdPessoa,
-            "DataVenda": createVend.DataVenda,
-            "TotalVenda": novaTotalVenda,
-            "FormaPagamento": formaPagamento,
-            "Prazo": prazo,
-            "Parcelas": parcelas,
-            "itens_venda": addProdVenda.map(prod => ({
-                "IdProduto": prod.IdProduto,
-                "NomeProduto": prod.NomeProduto,
-                "QtdProduto": prod.QtdProduto,
-                "ValorUnitario": prod.Preco,
-                "ValorTotal": prod.ValorTotal
-            }))
-        };
+            const vendaData = {
+                "IdCliente": selectedUser.IdPessoa,
+                "DataVenda": createVend.DataVenda,
+                "TotalVenda": novaTotalVenda,
+                "FormaPagamento": formaPagamento,
+                "Prazo": prazo,
+                "Parcelas": parcelas,
+                "itens_venda": addProdVenda.map(prod => ({
+                    "IdProduto": prod.IdProduto,
+                    "NomeProduto": prod.NomeProduto,
+                    "QtdProduto": prod.QtdProduto,
+                    "ValorUnitario": prod.Preco,
+                    "ValorTotal": prod.ValorTotal
+                }))
+            };
 
-        addVend(vendaData);
+            addVend(vendaData);
+
+        } catch (error) {
+            setErrorMessage('Confira se os campos estão preenchidos')
+            modalErrorOpenModal()
+        }
     };
 
     const [selectedProd, setSelectedProd] = useState({
@@ -181,7 +194,18 @@ function Venda() {
             setParcelas()
             closeModal()
         } catch (error) {
-            console.error('Erro ao adicionar venda:', error);
+            if (error.response) {
+                const errorData = error.response.data;
+
+                const errorMessage = JSON.stringify(errorData, null, 2);
+
+                setErrorMessage(errorMessage);
+            } else {
+                setErrorMessage('Erro ao adicionar compra. Tente novamente.');
+            }
+
+            console.error(errorMessage, error);
+            modalErrorOpenModal();
         }
     };
 
@@ -243,7 +267,7 @@ function Venda() {
                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700 overflow-y-auto" style={{ maxHeight: '300px' }}>
                                     {vends.length > 0 ? (
                                         vends.map((vend) => (
-                                            <tr key={vend.IdVenda} className="hover:bg-gray-100 dark:hover:bg-gray-200">                                              
+                                            <tr key={vend.IdVenda} className="hover:bg-gray-100 dark:hover:bg-gray-200">
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.IdVenda}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.IdCliente.NomePessoa}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.DataVenda}</td>
@@ -630,6 +654,18 @@ function Venda() {
                     </button>
                 </div>
             </Modal>
+
+            <ModalError isOpen={modalErrorOpen} onClose={modalErrorCloseModal}>
+                <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="p-10 pt-10 text-center">
+                        <svg className="w-16 h-16 mx-auto text-red-600" fillRule="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">{errorMessage}</h3>
+                        <button onClick={modalErrorCloseModal} className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </ModalError>
         </div >
     );
 }

@@ -2,8 +2,15 @@ import Menu from '../components/Menu';
 import { useEffect, useState, useCallback } from "react";
 import API from "../utils/api";
 import Modal from "../components/Modal";
+import ModalError from '../components/ModalError';
 
 function Produto() {
+
+    const [modalErrorOpen, setModalErrorOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState([]);
+
+    const modalErrorOpenModal = () => setModalErrorOpen(true);
+    const modalErrorCloseModal = () => setModalErrorOpen(false);
 
     const [deletModalOpen, setDeletModalOpen] = useState(false);
     const deletOpenModal = () => setDeletModalOpen(true);
@@ -72,8 +79,21 @@ function Produto() {
             await API.post('/produto/create/', createProd);
             getProds();
             closeModal();
+            setCreateProd(null);
+            setErrorMessage('');
         } catch (error) {
-            console.error('Erro ao adicionar o produto:', error);
+            if (error.response) {
+                const errorData = error.response.data;
+                
+                const errorMessage = JSON.stringify(errorData, null, 2); 
+                
+                setErrorMessage(errorMessage);
+              } else {
+                setErrorMessage('Erro ao editar o usuário. Tente novamente.');
+              }
+        
+              console.error(errorMessage, error);
+              modalErrorOpenModal();
         }
     };
 
@@ -82,8 +102,21 @@ function Produto() {
             await API.put(`/produto/update/${selectedProd.IdProduto}`, selectedProd);
             getProds();
             closeModal();
+
+            setErrorMessage('');
         } catch (error) {
-            console.error('Erro ao atualizar o produto:', error);
+            if (error.response) {
+                const errorData = error.response.data;
+                
+                const errorMessage = JSON.stringify(errorData, null, 2); 
+                
+                setErrorMessage(errorMessage);
+              } else {
+                setErrorMessage('Erro ao editar o usuário. Tente novamente.');
+              }
+        
+              console.error(errorMessage, error);
+              modalErrorOpenModal();
         }
     };
 
@@ -275,6 +308,7 @@ function Produto() {
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
+                                        disabled
                                     />
                                 </div>
 
@@ -380,6 +414,18 @@ function Produto() {
                 </div>
 
             </Modal>
+
+            <ModalError isOpen={modalErrorOpen} onClose={modalErrorCloseModal}>
+                <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="p-10 pt-10 text-center">
+                        <svg className="w-16 h-16 mx-auto text-red-600" fillRule="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">{errorMessage}</h3>
+                        <button onClick={ modalErrorCloseModal } className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </ModalError>
         </div >
     )
 }
