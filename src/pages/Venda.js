@@ -264,7 +264,7 @@ function Venda() {
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Ação</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700 overflow-y-auto" style={{ maxHeight: '300px' }}>
+                                <tbody className="scroll-tbody bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                     {vends.length > 0 ? (
                                         vends.map((vend) => (
                                             <tr key={vend.IdVenda} className="hover:bg-gray-100 dark:hover:bg-gray-200">

@@ -23,8 +23,6 @@ function Receber() {
             setContaReceber(data.results);
             setNextPage(data.next)
             setPreviousPage(data.previous)
-            console.log(data.next)
-            console.log(data.previous)
         } catch (error) {
             console.error('Erro ao carregar itens:', error);
         }
@@ -45,7 +43,6 @@ function Receber() {
     const handleContaChange = (contId) => {
         const contaAreceber = contaReceber.find(p => p.venda.IdVenda === contId);
         setSelectedConta(contaAreceber);
-        console.log(contaAreceber);
     };
 
     const getContaReceber = useCallback(async () => {
@@ -59,7 +56,7 @@ function Receber() {
                 setPreviousPage(data.previous)
             }
         } catch (error) {
-            console.error(console.error('Erro ao buscar as conta a receber:', error))
+            console.error('Erro ao buscar as conta a receber:', error)
         }
     }, [])
 
