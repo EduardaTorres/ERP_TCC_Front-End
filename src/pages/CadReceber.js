@@ -2,12 +2,25 @@ import Menu from '../components/Menu';
 import { useEffect, useState, useCallback } from "react";
 import API from "../utils/api";
 import Modal from "../components/Modal";
+import ModalError from '../components/ModalError';
+
 
 function Receber() {
+
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+    const confirmOpenModal = () => setConfirmModalOpen(true);
+    const confirmCloseModal = () => setConfirmModalOpen(false);
+
+    const [modalErrorOpen, setModalErrorOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState([]);
+    const modalErrorOpenModal = () => setModalErrorOpen(true);
+    const modalErrorCloseModal = () => setModalErrorOpen(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
+
+    const [selecteParcela, setSelecteParcela] = useState(null);
 
     const [contaReceber, setContaReceber] = useState([])
     const [selectedConta, setSelectedConta] = useState(null);
@@ -43,6 +56,47 @@ function Receber() {
     const handleContaChange = (contId) => {
         const contaAreceber = contaReceber.find(p => p.venda.IdVenda === contId);
         setSelectedConta(contaAreceber);
+    };
+
+    const handleStatusChange = (e, idx) => {
+        const updatedParcelas = [...selectedConta.parcelas];
+
+        updatedParcelas[idx] = {
+            ...updatedParcelas[idx],
+            Status: e.target.value === 'Pago',
+        };
+
+        setSelectedConta({
+            ...selectedConta,
+            parcelas: updatedParcelas,
+        });
+
+        const updatedParcela = {
+            ...selectedConta.parcelas[idx],
+            Status: e.target.value === 'Pago',
+        };
+
+        setSelecteParcela(updatedParcela);
+    };
+
+    const updateContaReceber = async () => {
+        try {
+            await API.put(`/conta-receber/update/${selecteParcela.IdContaReceber}`, selecteParcela);
+
+            getContaReceber();
+            setErrorMessage('');
+        } catch (error) {
+            let errorMessage = 'Erro ao editar o conta a receber. Tente novamente.';
+
+            if (error.response) {
+                const errorData = error.response.data;
+                errorMessage = JSON.stringify(errorData, null, 2);
+            }
+
+            setErrorMessage(errorMessage);
+            console.error(errorMessage, error);
+            modalErrorOpenModal();
+        }
     };
 
     const getContaReceber = useCallback(async () => {
@@ -170,7 +224,8 @@ function Receber() {
                                         <tr>
                                             <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Valor</th>
                                             <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Data de vencimento</th>
-                                            <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Status</th>
+                                            <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Pagamento</th>
+                                            <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
@@ -179,6 +234,23 @@ function Receber() {
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.Valor} $</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.DataVencimento}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.Status ? 'Pago' : 'Pendente'}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">
+                                                    {parcela.Status ? (
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 text-green-500">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    ) : (
+                                                        <select
+                                                            value={parcela.Status ? 'Pago' : 'Pendente'}
+                                                            // onChange={(e) => handleStatusChange(e, idx)}
+                                                            onChange={(e) => {handleStatusChange(e, idx); confirmOpenModal()}}
+                                                            className="border rounded p-1"
+                                                        >
+                                                            <option value="Pendente">Pendente</option>
+                                                            <option value="Pago">Pago</option>
+                                                        </select>
+                                                    )}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -205,6 +277,32 @@ function Receber() {
                     <button className="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="submit">Salvar Alteração</button>
                 </div>
             </Modal>
+
+            <ModalError isOpen={modalErrorOpen} onClose={modalErrorCloseModal}>
+                <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="p-10 pt-10 text-center">
+                        <svg className="w-16 h-16 mx-auto text-red-600" fillRule="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">{errorMessage}</h3>
+                        <button onClick={modalErrorCloseModal} className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </ModalError>
+
+            <ModalError isOpen={confirmModalOpen} onClose={() => { confirmCloseModal(); setSelecteParcela(null)}}>
+                <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                    <div className="p-10 pt-10 text-center">
+                        <svg className="w-16 h-16 mx-auto text-red-600" fillRule="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">Deseja realmente alterar? Ação irreversível</h3>
+                        <button onClick={() => { updateContaReceber(); confirmCloseModal(); setSelecteParcela(null)}} className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                            OK
+                        </button><button onClick={ confirmCloseModal } className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </ModalError>
         </div>
     )
 }
