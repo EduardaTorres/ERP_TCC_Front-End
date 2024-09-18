@@ -355,18 +355,18 @@ function Cliente() {
                     ) : (
                         <form action=" ">
                             <div className="grid grid-cols-6 gap-6">
-                                <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="nome" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome</label>
-                                    <input
-                                        type="text"
-                                        name="nome"
-                                        onChange={(e) => setCreateUser({ ...createUser, NomePessoa: e.target.value })}
-                                        id="nome"
-                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder=""
-                                        required
-                                    />
-                                </div>
+                            <div className="col-span-6 sm:col-span-3">
+  <label htmlFor="nome" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome <span className="text-red-600">*</span></label>
+  <input
+    type="text"
+    name="nome"
+    onChange={(e) => setCreateUser({ ...createUser, NomePessoa: e.target.value })}
+    id="nome"
+    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+    placeholder=""
+    required
+  />
+</div>
                                 <div className="col-span-6 sm:col-span-3">
                                     {/* <label htmlFor="CPFouCNPJ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CPF/CNPJ</label> */}
                                     <div className="mb-1">
@@ -392,7 +392,7 @@ function Cliente() {
                                 </div>
 
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="Email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Email</label>
+                                    <label htmlFor="Email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Email <span className="text-red-600">*</span></label>
                                     <input
                                         type="Email"
                                         name="Email"
@@ -404,7 +404,7 @@ function Cliente() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="telefone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Telefone</label>
+                                    <label htmlFor="telefone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Telefone <span className="text-red-600">*</span></label>
                                     <InputMask
                                         type="text"
                                         name="telefone"
@@ -417,7 +417,7 @@ function Cliente() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="NomeRua" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Endereço</label>
+                                    <label htmlFor="NomeRua" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Endereço <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="NomeRua"
@@ -429,7 +429,7 @@ function Cliente() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="Numero" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Número</label>
+                                    <label htmlFor="Numero" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Número <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="Numero"
@@ -441,7 +441,7 @@ function Cliente() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="NomeBairro" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Bairro</label>
+                                    <label htmlFor="NomeBairro" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Bairro <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="NomeBairro"

@@ -251,7 +251,7 @@ function Fornecedor() {
                         <form action=" ">
                             <div className="grid grid-cols-6 gap-6">
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="nomeJ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Razão Social</label>
+                                    <label htmlFor="nomeJ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Razão Social </label>
                                     <input
                                         type="text"
                                         name="nomeJ"
@@ -361,7 +361,7 @@ function Fornecedor() {
                         <form action=" ">
                             <div className="grid grid-cols-6 gap-6">
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="nomeJ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Razão Social</label>
+                                    <label htmlFor="nomeJ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Razão Social <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="nomeJ"
@@ -373,7 +373,7 @@ function Fornecedor() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="NomeFantasia" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome Fantasia</label>
+                                    <label htmlFor="NomeFantasia" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome Fantasia <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="NomeFantasia"
@@ -385,7 +385,7 @@ function Fornecedor() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="cnpj" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CNPJ</label>
+                                    <label htmlFor="cnpj" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CNPJ <span className="text-red-600">*</span></label>
                                     <InputMask
                                         type="text"
                                         name="cnpj"
@@ -398,7 +398,7 @@ function Fornecedor() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Email</label>
+                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Email <span className="text-red-600">*</span></label>
                                     <input
                                         type="email"
                                         name="email"
@@ -410,7 +410,7 @@ function Fornecedor() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="telefone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Telefone</label>
+                                    <label htmlFor="telefone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Telefone <span className="text-red-600">*</span></label>
                                     <InputMask
                                         type="text"
                                         name="telefone"
@@ -423,7 +423,7 @@ function Fornecedor() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="endereco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Endereço</label>
+                                    <label htmlFor="endereco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Endereço <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="endereco"
@@ -435,7 +435,7 @@ function Fornecedor() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="numero" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Número</label>
+                                    <label htmlFor="numero" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Número <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="numero"
@@ -447,7 +447,7 @@ function Fornecedor() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="bairro" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Bairro</label>
+                                    <label htmlFor="bairro" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Bairro <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="bairro"

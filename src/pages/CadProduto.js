@@ -318,7 +318,7 @@ function Produto() {
                         <form action=" ">
                             <div className="grid grid-cols-6 gap-6">
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="nome" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome</label>
+                                    <label htmlFor="nome" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="nome"
@@ -330,7 +330,7 @@ function Produto() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="descricao" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Descrição</label>
+                                    <label htmlFor="descricao" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Descrição <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="descricao"
@@ -342,7 +342,7 @@ function Produto() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="preco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Preço</label>
+                                    <label htmlFor="preco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Preço <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="preco"
@@ -354,7 +354,7 @@ function Produto() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="unidMedida" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Unidade de Medida</label>
+                                    <label htmlFor="unidMedida" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Unidade de Medida <span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="unidMedida"
@@ -366,7 +366,7 @@ function Produto() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="estoque" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Estoque</label>
+                                    <label htmlFor="estoque" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Estoque <span className="text-red-600">*</span></label>
                                     <input
                                         type="number"
                                         name="estoque"
