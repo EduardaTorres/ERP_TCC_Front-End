@@ -208,6 +208,30 @@ function Compra() {
         }
     }, []);
 
+    const getSearchComp = useCallback(async (compSearch) => {
+       
+        if(!compSearch || compSearch.length === 0){
+            getComps()
+            return
+        }
+        try{
+            const { data } = await API.get(`/compra/search/?query=${compSearch}`);
+            
+            if (data) {
+                setTot(data.count)
+                setComps(data.results);
+                setNextPage(data.next)
+                setPreviousPage(data.previous)
+            } else {
+                setComps([])
+
+            }
+        } catch (error) {
+            console.error('Erro ao buscar compra:', error);
+        }
+    }, [getComps]);
+
+
 
     useEffect(() => {
         getProds();
@@ -237,12 +261,13 @@ function Compra() {
                             <form className="lg:pr-3" action="#" method="GET">
                                 <label htmlFor="users-search" className="sr-only">Search</label>
                                 <div className="relative mt-1 lg:w-64 xl:w-96">
-                                    <input
+                                <input
                                         type="text"
                                         name="pesquisar"
                                         id="users-search"
                                         className="bg-gray-50 border border-gray-300 text-gray-300 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-700 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder="Pesquisar"
+                                        onChange={(e) => getSearchComp(e.target.value)}
                                     ></input>
                                 </div>
                             </form>

@@ -57,6 +57,7 @@ function Cliente() {
     };
 
     const getUsers = useCallback(async () => {
+
         try {
             const { data } = await API.get('/clientes/');
 
@@ -70,6 +71,29 @@ function Cliente() {
             console.error('Erro ao buscar os usuários:', error);
         }
     }, []);
+
+    const getSearchUser = useCallback(async (userSearch) => {
+       
+        if(!userSearch || userSearch.length === 0){
+            getUsers()
+            return
+        }
+        try{
+            const { data } = await API.get(`/cliente/search/?query=${userSearch}`);
+            
+            if (data) {
+                setTot(data.count)
+                setUsers(data.results);
+                setNextPage(data.next)
+                setPreviousPage(data.previous)
+            } else {
+                setUsers([])
+
+            }
+        } catch (error) {
+            console.error('Erro ao buscar usuário:', error);
+        }
+    }, [getUsers]);
 
     const handleUserChange = (userId) => {
         const user = users.find(u => u.IdPessoa === userId);
@@ -98,9 +122,8 @@ function Cliente() {
           console.error(errorMessage, error);
           modalErrorOpenModal();
         }
-      };
+    };
     
-
     const updateUser = async () => {
         try {
             await API.put(`/cliente/update/${selectedUser.IdPessoa}`, selectedUser);
@@ -158,6 +181,7 @@ function Cliente() {
                                         id="users-search"
                                         className="bg-gray-50 border border-gray-300 text-gray-300 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-700 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder="Pesquisar"
+                                        onChange={(e) => getSearchUser(e.target.value)}
                                     ></input>
                                 </div>
                             </form>
@@ -183,10 +207,6 @@ function Cliente() {
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Nome</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">CPF/CNPJ</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Telefone</th>
-                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">E-mail</th>
-                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Rua</th>
-                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Número</th>
-                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Bairro</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Cidade</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Ação</th>
                                     </tr>
@@ -199,10 +219,7 @@ function Cliente() {
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{user.NomePessoa}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{user.CPFouCNPJ}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{user.Telefone}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{user.Email}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{user.NomeRua}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{user.Numero}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{user.NomeBairro}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{user.Cidade}</td>
                                                 <td className="p-4 space-x-2 whitespace-nowrap">
                                                     <button type="button" onClick={() => { handleUserChange(user.IdPessoa); openModal(); }} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-cyan-800 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                                         <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"></path></svg>
@@ -351,6 +368,19 @@ function Cliente() {
                                         required
                                     />
                                 </div>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="cidade" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Cidade</label>
+                                    <input
+                                        type="text"
+                                        name="cidade"
+                                        value={selectedUser.Cidade}
+                                        onChange={(e) => setSelectedUser({ ...selectedUser, Cidade: e.target.value })}
+                                        id="cidade"
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder=""
+                                        required
+                                    />
+                                </div>
                             </div>
                         </form>
                     ) : (
@@ -448,6 +478,18 @@ function Cliente() {
                                         name="NomeBairro"
                                         onChange={(e) => setCreateUser({ ...createUser, NomeBairro: e.target.value })}
                                         id="NomeBairro"
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder=""
+                                        required
+                                    />
+                                </div>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="Cidade" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Cidade <span className="text-red-600">*</span></label>
+                                    <input
+                                        type="text"
+                                        name="Cidade"
+                                        onChange={(e) => setCreateUser({ ...createUser, Cidade: e.target.value })}
+                                        id="Cidade"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required

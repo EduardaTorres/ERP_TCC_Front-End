@@ -8,6 +8,7 @@ import Venda from './pages/Venda';
 import Receber from './pages/CadReceber';
 import Compra from './pages/Compra';
 import Pagar from './pages/CadPagar';
+import Relatorio from './pages/Relatorios'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/CadReceber" element={<Receber />}></Route>
           <Route path="/CadPagar" element={<Pagar />}></Route>
           <Route path="/Compra" element={<Compra />}></Route>
+          <Route path="/Relatorios" element={<Relatorio />}></Route>
         </Routes>
     </BrowserRouter>
   );

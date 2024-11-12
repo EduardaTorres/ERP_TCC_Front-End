@@ -29,6 +29,9 @@ function Menu() {
                     <Link to="/CadPagar" className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
                         Conta Pagar
                     </Link>
+                    <Link to="/Relatorios" className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-black mr-4">
+                        Relatorios
+                    </Link>
                 </div>
                 <div>
                     <Link to="/" className="inline-flex items-center text-sm px-4 py-2 leading-none border rounded-lg text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">

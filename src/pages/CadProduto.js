@@ -130,6 +130,29 @@ function Produto() {
         }
     };
 
+    const getSearchProd = useCallback(async (prodSearch) => {
+       
+        if(!prodSearch || prodSearch.length === 0){
+            getProds()
+            return
+        }
+        try{
+            const { data } = await API.get(`/produto/search/?query=${prodSearch}`);
+            
+            if (data) {
+                setTot(data.count)
+                setProds(data.results);
+                setNextPage(data.next)
+                setPreviousPage(data.previous)
+            } else {
+                setProds([])
+
+            }
+        } catch (error) {
+            console.error('Erro ao buscar produto:', error);
+        }
+    }, [getProds]);
+
     useEffect(() => {
         getProds();
     }, [getProds]);
@@ -148,7 +171,14 @@ function Produto() {
                             <form className="lg:pr-3" action="#" method="GET">
                                 <label htmlFor="users-search" className="sr-only">Search</label>
                                 <div className="relative mt-1 lg:w-64 xl:w-96">
-                                    <input type="text" name="pesquisar" id="users-search" className="bg-gray-50 border border-gray-300 text-gray-300 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-700 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Pesquisar"></input>
+                                <input
+                                        type="text"
+                                        name="pesquisar"
+                                        id="users-search"
+                                        className="bg-gray-50 border border-gray-300 text-gray-300 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-700 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder="Pesquisar"
+                                        onChange={(e) => getSearchProd(e.target.value)}
+                                    ></input>
                                 </div>
                             </form>
                         </div>
@@ -173,7 +203,6 @@ function Produto() {
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Nome</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Descrição</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Preço</th>
-                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Uni.Medida</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Estoque</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Ação</th>
                                     </tr>
@@ -186,7 +215,6 @@ function Produto() {
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.NomeProduto}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Descricao}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{(prod.Preco).toFixed(2)}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.UnidMedida}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Estoque}</td>
 
 
