@@ -209,14 +209,14 @@ function Compra() {
     }, []);
 
     const getSearchComp = useCallback(async (compSearch) => {
-       
-        if(!compSearch || compSearch.length === 0){
+
+        if (!compSearch || compSearch.length === 0) {
             getComps()
             return
         }
-        try{
+        try {
             const { data } = await API.get(`/compra/search/?query=${compSearch}`);
-            
+
             if (data) {
                 setTot(data.count)
                 setComps(data.results);
@@ -231,6 +231,28 @@ function Compra() {
         }
     }, [getComps]);
 
+    const getSearchProd = useCallback(async (prodSearch) => {
+
+        if (!prodSearch || prodSearch.length === 0) {
+            getProds()
+            return
+        }
+        try {
+            const { data } = await API.get(`/produto/search/?query=${prodSearch}`);
+
+            if (data) {
+                setTot(data.count)
+                setProds(data.results);
+                setNextPage(data.next)
+                setPreviousPage(data.previous)
+            } else {
+                setProds([])
+
+            }
+        } catch (error) {
+            console.error('Erro ao buscar produto:', error);
+        }
+    }, [getProds]);
 
 
     useEffect(() => {
@@ -261,7 +283,7 @@ function Compra() {
                             <form className="lg:pr-3" action="#" method="GET">
                                 <label htmlFor="users-search" className="sr-only">Search</label>
                                 <div className="relative mt-1 lg:w-64 xl:w-96">
-                                <input
+                                    <input
                                         type="text"
                                         name="pesquisar"
                                         id="users-search"
@@ -575,16 +597,27 @@ function Compra() {
                     <h3 className="text-xl font-semibold dark:text-white">
                         Produtos
                     </h3>
+                    <div>
+                        <form className="lg:pr-20" action="#" method="GET">
+                            <div className="lg:w-64 xl:w-96">
+                                <input
+                                    type="text"
+                                    name="pesquisar"
+                                    id="users-search"
+                                    className="bg-gray-50 border border-gray-300 text-gray-300 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-700 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    placeholder="Pesquisar"
+                                    onChange={(e) => getSearchProd(e.target.value)}
+                                ></input>
+                            </div>
+                        </form>
+                    </div>
                 </div>
                 <div className="overflow-y-scroll h-96">
                     <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-700">
                         <thead className="bg-gray-100 dark:bg-cyan-800">
                             <tr>
-                                <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">ID</th>
                                 <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Nome</th>
-                                <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Descrição</th>
                                 <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Preço</th>
-                                <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Unidade Medida</th>
                                 <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Estoque</th>
                                 <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Ação</th>
                             </tr>
@@ -593,11 +626,8 @@ function Compra() {
                             <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                 {prods.map((prod) => (
                                     <tr key={prod.IdProduto} className="hover:bg-gray-100 dark:hover:bg-gray-200">
-                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.IdProduto}</td>
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.NomeProduto}</td>
-                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Descricao}</td>
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{(prod.Preco).toFixed(2)}</td>
-                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.UnidMedida}</td>
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Estoque}</td>
                                         <td className="p-4 space-x-2 whitespace-nowrap">
                                             <button type="button" onClick={() => { handleProdChange(prod.IdProduto); openProdQtdModal(); }} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-cyan-800 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
@@ -610,6 +640,7 @@ function Compra() {
                             </tbody>) : (
                             <p >Nenhum produto encontrado</p>
                         )}
+
                     </table>
                 </div>
                 <div className="items-center p-7 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">

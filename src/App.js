@@ -9,6 +9,7 @@ import Receber from './pages/CadReceber';
 import Compra from './pages/Compra';
 import Pagar from './pages/CadPagar';
 import Relatorio from './pages/Relatorios'
+import Usuario from './pages/Usuario'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/CadPagar" element={<Pagar />}></Route>
           <Route path="/Compra" element={<Compra />}></Route>
           <Route path="/Relatorios" element={<Relatorio />}></Route>
+          <Route path="/Usuarios" element={<Usuario />}></Route>
         </Routes>
     </BrowserRouter>
   );
