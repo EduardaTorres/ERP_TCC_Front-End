@@ -89,12 +89,17 @@ function Venda() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const totalComDesconto = calcularTotalComDesconto();
         try {
 
             const vendaData = {
+                "TotalSemDesconto": novaTotalVenda,
+                "TotalComDesconto": totalComDesconto,
+                "DescontoValor": descontoValor,
+                "DescontoPercentual": descontoPercentual,
                 "IdCliente": selectedUser.IdPessoa,
                 "DataVenda": createVend.DataVenda,
-                "TotalVenda": novaTotalVenda,
+                "TotalVenda": totalComDesconto,
                 "FormaPagamento": formaPagamento,
                 "Prazo": prazo,
                 "Parcelas": parcelas,
@@ -210,14 +215,14 @@ function Venda() {
     };
 
     const getSearchVend = useCallback(async (vendSearch) => {
-       
-        if(!vendSearch || vendSearch.length === 0){
+
+        if (!vendSearch || vendSearch.length === 0) {
             getVends()
             return
         }
-        try{
+        try {
             const { data } = await API.get(`/venda/search/?query=${vendSearch}`);
-            
+
             if (data) {
                 setTot(data.count)
                 setVends(data.results);
@@ -268,6 +273,23 @@ function Venda() {
         return acc + item.QtdProduto * item.Preco;
     }, 0);
 
+    const [descontoValor, setDescontoValor] = useState(0);
+    const [descontoPercentual, setDescontoPercentual] = useState(0);
+
+   const calcularTotalComDesconto = () => {
+    let total = novaTotalVenda; // Valor antes do desconto
+
+    if (descontoValor > 0) {
+        total -= descontoValor; // Subtraia o desconto em valor
+    } else if (descontoPercentual > 0) {
+        total -= (novaTotalVenda * descontoPercentual) / 100; // Subtraia o desconto percentual
+    }
+
+    return Math.max(total, 0); // Garante que o total nunca será negativo
+};
+
+
+
     return (
         <div className="flex flex-col min-h-screen">
             <Menu />
@@ -282,7 +304,7 @@ function Venda() {
                             <form className="lg:pr-3" action="#" method="GET">
                                 <label htmlFor="users-search" className="sr-only">Search</label>
                                 <div className="relative mt-1 lg:w-64 xl:w-96">
-                                <input
+                                    <input
                                         type="text"
                                         name="pesquisar"
                                         id="users-search"
@@ -409,14 +431,14 @@ function Venda() {
                             <div >
                                 {selectedVend.itens_venda.length > 0 ? (
                                     <>
-                                        <div className="overflow-x-auto max-h-80">
+                                        <div className="overflow-x-auto max-h-60">
                                             <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                                 <thead>
                                                     <tr>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
@@ -437,11 +459,15 @@ function Venda() {
                                                     <span>Sub-Total:</span>
                                                     <span>Prazo:</span>
                                                     <span>Valor de cada parcela:</span>
+                                                    <span>Desconto %</span>
+                                                    <span>Desconto valor</span>
                                                 </div>
                                                 <div className="flex flex-col pl-2 text-gray-500">
                                                     <span>{totalVenda.toFixed(2)}$</span>
                                                     <span>{selectedVend.Prazo}</span>
                                                     <span>{(selectedVend.TotalVenda / selectedVend.Parcelas).toFixed(2)}$</span>
+                                                    <span>{descontoPercentual}</span>
+                                                    <span>{descontoValor}</span>
                                                 </div>
                                             </div>
                                             <div className="flex justify-end p-4 font-bold text-gray-700">
@@ -457,7 +483,7 @@ function Venda() {
                         </form>
                     ) : (
                         <form>
-                            <div className="grid grid-cols-6 gap-6">
+                            <div className="grid grid-cols-6 mb-5 gap-6">
                                 <div className="col-span-6 sm:col-span-3">
                                     <UserCombobox />
                                 </div>
@@ -474,8 +500,55 @@ function Venda() {
                                     />
                                 </div>
 
-                                {/* Forma de Pagamento */}
-                                <div className="col-span-6 sm:col-span-2">
+                            </div>
+                            <div>
+                                {addProdVenda.length > 0 ? (
+                                    <>
+                                        <div className="overflow-x-auto max-h-40">
+                                            <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
+                                                <thead>
+                                                    <tr>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
+                                                    {addProdVenda.map((item, index) => (
+                                                        <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-200">
+                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.NomeProduto}</td>
+                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.QtdProduto}</td>
+                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.Preco.toFixed(2)}$</td>
+                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.ValorTotal}$</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                       
+                                    </>
+                                ) : (
+                                    <>
+                                        <div>
+                                            <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
+                                                <thead>
+                                                    <tr>
+                                                        <th className="px-10 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
+                                                        <th className="px-14 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
+                                                        <th className="px-20 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
+                                                        <th className="px-14 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <p>adicione produtos a venda</p>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                            <div className="grid grid-cols-6 mt-5 gap-6">
+                                  {/* Forma de Pagamento */}
+                                  <div className="col-span-6 sm:col-span-2">
                                     <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Forma de Pagamento</label>
                                     <select
                                         value={formaPagamento}
@@ -502,7 +575,7 @@ function Venda() {
                                 </div>
 
                                 {/* Parcelas (Gerado Automaticamente) */}
-                                <div className="col-span-6 sm:col-span-2 mb-4">
+                                <div className="col-span-6 sm:col-span-2">
                                     <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Parcelas</label>
                                     <input
                                         type="number"
@@ -513,61 +586,59 @@ function Venda() {
                                         disabled={formaPagamento === 'À vista'}
                                     />
                                 </div>
+
+                                {/* Desconto Valor */}
+                                <div className="col-span-6 sm:col-span-2">
+                                    <label htmlFor="descontoValor" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Desconto (Valor)</label>
+                                    <input
+                                        type="number"
+                                        id="descontoValor"
+                                        value={descontoValor}
+                                        onChange={(e) => {
+                                            const valor = parseFloat(e.target.value) || 0;
+                                            setDescontoValor(valor);
+                                            setDescontoPercentual(0); // Reseta o percentual ao mudar o valor
+                                        }}
+                                        className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2"
+                                    />
+                                </div>
+
+                                {/* Desconto % */}
+                                <div className="col-span-6 sm:col-span-2">
+                                    <label htmlFor="descontoPercentual" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Desconto (%)</label>
+                                    <input
+                                        type="number"
+                                        id="descontoPercentual"
+                                        value={descontoPercentual}
+                                        onChange={(e) => {
+                                            const percentual = parseFloat(e.target.value) || 0;
+                                            setDescontoPercentual(percentual);
+                                            setDescontoValor(0); // Reseta o valor ao mudar o percentual
+                                        }}
+                                        className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2"
+                                    />
+                                </div>
                             </div>
-                            <div>
-                                {addProdVenda.length > 0 ? (
-                                    <>
-                                        <div className="overflow-x-auto max-h-80">
-                                            <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
-                                                <thead>
-                                                    <tr>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
-                                                    {addProdVenda.map((item, index) => (
-                                                        <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-200">
-                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.NomeProduto}</td>
-                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.QtdProduto}</td>
-                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.Preco.toFixed(2)}$</td>
-                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.ValorTotal}$</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
-                                            <div className="flex justify-end p-4">
-                                                <span className="font-medium text-gray-700">Sub-Total:</span>
-                                                <span className="pl-2 text-gray-500">{novaTotalVenda.toFixed(2)}$</span>
-                                            </div>
-                                            <div className="flex justify-end p-4 font-bold text-gray-700">
+                            <div className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
+                                            <div className="flex justify-end p-2 font-bold text-gray-700">
                                                 <span>Total:</span>
                                                 <span className="pl-2 text-gray-500">{novaTotalVenda.toFixed(2)}$</span>
                                             </div>
                                         </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div>
-                                            <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
-                                                <thead>
-                                                    <tr>
-                                                        <th className="px-10 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
-                                                        <th className="px-14 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
-                                                        <th className="px-20 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
-                                                        <th className="px-14 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                            <p>adicione produtos a venda</p>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
+                            <div className="flex justify-end pr-2 font-bold text-gray-700">
+                                    <span>Desconto:</span>
+                                    <span className="pl-2 text-gray-500">
+                                        {descontoValor > 0
+                                            ? `- ${descontoValor.toFixed(2)}$`
+                                            : descontoPercentual > 0
+                                                ? `- ${descontoPercentual.toFixed(2)}%`
+                                                : "Sem desconto"}
+                                    </span>
+                                </div>
+                                <div className="flex justify-end p-2 font-bold text-gray-700">
+                                    <span>Total com Desconto:</span>
+                                    <span className="pl-2 text-gray-500">{calcularTotalComDesconto().toFixed(2)}$</span>
+                                </div>
                         </form>
                     )}
                 </div>

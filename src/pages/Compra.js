@@ -76,6 +76,32 @@ function Compra() {
         }
     };
 
+    const previousPItems = async () => {
+        try {
+            const response = await fetch(`${previousPage}`);
+            const data = await response.json();
+            setProds(data.results);
+            setNextPage(data.next)
+            setPreviousPage(data.previous)
+        } catch (error) {
+            console.error('Erro ao carregar itens:', error);
+        }
+    };
+
+    const nextPItems = async () => {
+        try {
+            const response = await fetch(`${nextPage}`);
+            console.log(nextPage)
+            const data = await response.json();
+            setProds(data.results);
+            setNextPage(data.next)
+            setPreviousPage(data.previous)
+        } catch (error) {
+            console.error('Erro ao carregar itens:', error);
+        }
+    };
+
+
     const getComps = useCallback(async () => {
         try {
             const { data } = await API.get('/compras/');
@@ -200,8 +226,10 @@ function Compra() {
             const { data } = await API.get('/produtos/');
 
             if (data && data.results) {
-                // setTotProd(data.count)
                 setProds(data.results);
+                setNextPage(data.next)
+                setPreviousPage(data.previous)
+                console.log(data.next)
             }
         } catch (error) {
             console.error('Erro ao buscar os produto:', error);
@@ -413,14 +441,14 @@ function Compra() {
                             <div >
                                 {selectedComp.itens_compra.length > 0 ? (
                                     <>
-                                        <div className="overflow-x-auto max-h-80">
+                                        <div className="overflow-x-auto max-h-60">
                                             <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                                 <thead>
                                                     <tr>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
@@ -461,7 +489,7 @@ function Compra() {
                         </form>
                     ) : (
                         <form>
-                            <div className="grid grid-cols-6 gap-6">
+                            <div className="grid grid-cols-6 gap-6 mb-5 ">
                                 <div className="col-span-6 sm:col-span-3">
                                     <FornCombobox />
                                 </div>
@@ -477,49 +505,12 @@ function Compra() {
                                         required
                                     />
                                 </div>
-                                {/* Forma de Pagamento */}
-                                <div className="col-span-6 sm:col-span-2">
-                                    <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Forma de Pagamento</label>
-                                    <select
-                                        value={formaPagamento}
-                                        onChange={handleFormaPagamentoChange}
-                                        className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2">
-                                        <option value="">Selecione uma opção</option>
-                                        <option value="À vista">À Vista</option>
-                                        <option value="A prazo">A Prazo</option>
-                                    </select>
-                                </div>
 
-                                {/* Prazo */}
-                                <div className="col-span-6 sm:col-span-2">
-                                    <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Prazo</label>
-                                    <input
-                                        type="text"
-                                        value={prazo}
-                                        onChange={handlePrazoChange}
-                                        placeholder="Ex: 10,20,35"
-                                        className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2"
-                                        disabled={formaPagamento === 'À vista'}
-                                    />
-                                </div>
-
-                                {/* Parcelas (Gerado Automaticamente) */}
-                                <div className="col-span-6 sm:col-span-2 mb-4">
-                                    <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Parcelas</label>
-                                    <input
-                                        type="number"
-                                        value={parcelas}
-                                        readOnly
-                                        placeholder="Ex: 3"
-                                        className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2"
-                                        disabled={formaPagamento === 'À vista'}
-                                    />
-                                </div>
                             </div>
                             <div>
                                 {addProdComp.length > 0 ? (
                                     <>
-                                        <div className="overflow-x-auto max-h-80">
+                                        <div className="overflow-x-auto max-h-60">
                                             <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                                 <thead>
                                                     <tr>
@@ -551,6 +542,7 @@ function Compra() {
                                                 <span className="pl-2 text-gray-500">{novoValorTotal.toFixed(2)}$</span>
                                             </div>
                                         </div>
+
                                     </>
                                 ) : (
                                     <>
@@ -569,6 +561,46 @@ function Compra() {
                                         </div>
                                     </>
                                 )}
+                                <div className="grid grid-cols-6 gap-6 mt-5">
+                                {/* Forma de Pagamento */}
+                                <div className="col-span-6 sm:col-span-2">
+                                    <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Forma de Pagamento</label>
+                                    <select
+                                        value={formaPagamento}
+                                        onChange={handleFormaPagamentoChange}
+                                        className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2">
+                                        <option value="">Selecione uma opção</option>
+                                        <option value="À vista">À Vista</option>
+                                        <option value="A prazo">A Prazo</option>
+                                    </select>
+                                </div>
+                               
+                                    {/* Prazo */}
+                                    <div className="col-span-6 sm:col-span-2">
+                                        <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Prazo</label>
+                                        <input
+                                            type="text"
+                                            value={prazo}
+                                            onChange={handlePrazoChange}
+                                            placeholder="Ex: 10,20,35"
+                                            className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2"
+                                            disabled={formaPagamento === 'À vista'}
+                                        />
+                                    </div>
+
+                                    {/* Parcelas (Gerado Automaticamente) */}
+                                    <div className="col-span-6 sm:col-span-2 mb-4">
+                                        <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Parcelas</label>
+                                        <input
+                                            type="number"
+                                            value={parcelas}
+                                            readOnly
+                                            placeholder="Ex: 3"
+                                            className="w-full text-left bg-white border border-gray-900 rounded-lg shadow-sm px-3 py-2"
+                                            disabled={formaPagamento === 'À vista'}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     )}
@@ -640,11 +672,19 @@ function Compra() {
                             </tbody>) : (
                             <p >Nenhum produto encontrado</p>
                         )}
-
                     </table>
                 </div>
                 <div className="items-center p-7 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
-
+                    <div className="flex items-center space-x-3">
+                        <button onClick={previousPItems} className="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                            <svg className="w-5 h-5 mr-1 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+                            Anterior
+                        </button >
+                        <button onClick={nextPItems} className="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                            Próxima
+                            <svg className="w-5 h-5 ml-1 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path></svg>
+                        </button >
+                    </div>
                 </div>
             </Modal>
 
