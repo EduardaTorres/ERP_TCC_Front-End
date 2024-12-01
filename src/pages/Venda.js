@@ -466,13 +466,13 @@ function Venda() {
                                                     <span>{totalVenda.toFixed(2)}$</span>
                                                     <span>{selectedVend.Prazo}</span>
                                                     <span>{(selectedVend.TotalVenda / selectedVend.Parcelas).toFixed(2)}$</span>
-                                                    <span>{descontoPercentual}</span>
-                                                    <span>{descontoValor}</span>
+                                                    <span>{selectedVend.DescontoPercentual}</span>
+                                                    <span>{selectedVend.DescontoValor}</span>
                                                 </div>
                                             </div>
                                             <div className="flex justify-end p-4 font-bold text-gray-700">
                                                 <span>Total:</span>
-                                                <span className="pl-2 text-gray-500">{totalVenda.toFixed(2)}$</span>
+                                                <span className="pl-2 text-gray-500">{selectedVend.TotalVenda.toFixed(2)}$</span>
                                             </div>
                                         </div>
                                     </>

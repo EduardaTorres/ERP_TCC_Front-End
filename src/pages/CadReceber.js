@@ -222,9 +222,9 @@ function Receber() {
                                 <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                     <thead>
                                         <tr>
-                                            <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Valor</th>
-                                            <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Data de vencimento</th>
-                                            <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Pagamento</th>
+                                            <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Valor</th>
+                                            <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Data de vencimento</th>
+                                            <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Pagamento</th>
                                             <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Status</th>
                                         </tr>
                                     </thead>

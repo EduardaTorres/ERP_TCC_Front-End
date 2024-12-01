@@ -3,6 +3,7 @@ import API from "../utils/api";
 import Menu from '../components/Menu';
 
 const PermissionList = () => {
+    const token = localStorage.getItem("authToken");
     const [permissions, setPermissions] = useState([]);
     const [usuarios, setUsuarios] = useState([]);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -22,7 +23,12 @@ const PermissionList = () => {
 
     const getUsuarios = useCallback(async () => {
         try {
-            const { data } = await API.get('/usuarios/');
+            const { data } = await API.get('/usuarios/', {
+                headers: {
+                    "Authorization": `Token ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
             if (data && data.results) {
                 setUsuarios(data.results);
             }
@@ -33,7 +39,12 @@ const PermissionList = () => {
 
     const getUserPermissions = useCallback(async (userId) => {
         try {
-            const { data } = await API.get(`/user/${userId}/permissions/`);
+            const { data } = await API.get(`/user/${userId}/permissions/`, {
+                headers: {
+                    "Authorization": `Token ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
             if (data) {
                 setUserPermissions(data);
             }
@@ -78,11 +89,11 @@ const PermissionList = () => {
 
     return (
         <div className="mx-auto ">
-            <Menu/>
+            <Menu />
             <h1 className="text-2xl font-bold mb-4">Selecione um Usuário</h1>
-            <select 
-                onChange={handleUserChange} 
-                value={selectedUser || ''} 
+            <select
+                onChange={handleUserChange}
+                value={selectedUser || ''}
                 className="w-full p-2 mb-6 border border-gray-300 rounded-lg"
             >
                 <option value="">Selecione um usuário</option>
@@ -129,8 +140,8 @@ const PermissionList = () => {
                         </div>
                     </div>
 
-                    <button 
-                        onClick={updateUserPermissions} 
+                    <button
+                        onClick={updateUserPermissions}
                         className="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                     >
                         Atualizar Permissões

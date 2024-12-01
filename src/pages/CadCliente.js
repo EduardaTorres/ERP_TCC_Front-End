@@ -6,6 +6,7 @@ import ModalError from '../components/ModalError';
 import InputMask from 'react-input-mask';
 
 function Cliente() {
+    const token = localStorage.getItem("authToken");
     const [modalErrorOpen, setModalErrorOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState([]);
 
@@ -59,13 +60,19 @@ function Cliente() {
     const getUsers = useCallback(async () => {
 
         try {
-            const { data } = await API.get('/clientes/');
+            const { data } = await API.get('/clientes/', {
+                headers: {
+                    "Authorization": `Token ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
 
             if (data && data.results) {
                 setTot(data.count)
                 setUsers(data.results);
                 setNextPage(data.next)
                 setPreviousPage(data.previous)
+                console.log(token)
             }
         } catch (error) {
             console.error('Erro ao buscar os usuários:', error);
@@ -73,14 +80,14 @@ function Cliente() {
     }, []);
 
     const getSearchUser = useCallback(async (userSearch) => {
-       
-        if(!userSearch || userSearch.length === 0){
+
+        if (!userSearch || userSearch.length === 0) {
             getUsers()
             return
         }
-        try{
+        try {
             const { data } = await API.get(`/cliente/search/?query=${userSearch}`);
-            
+
             if (data) {
                 setTot(data.count)
                 setUsers(data.results);
@@ -102,28 +109,32 @@ function Cliente() {
 
     const addUser = async () => {
         try {
-          await API.post('/cliente/create/', createUser);
-          getUsers();
-          closeModal();
-    
-          setErrorMessage('');
-          console.log(createUser)
+            await API.post('/cliente/create/', createUser, {
+                headers: {
+                    "Authorization": `Token ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+            getUsers();
+            closeModal();
+
+            setErrorMessage('');
         } catch (error) {
-          if (error.response) {
-            const errorData = error.response.data;
-            
-            const errorMessage = JSON.stringify(errorData, null, 2); 
-            
-            setErrorMessage(errorMessage);
-          } else {
-            setErrorMessage('Erro ao adicionar o usuário. Tente novamente.');
-          }
-    
-          console.error(errorMessage, error);
-          modalErrorOpenModal();
+            if (error.response) {
+                const errorData = error.response.data;
+
+                const errorMessage = JSON.stringify(errorData, null, 2);
+
+                setErrorMessage(errorMessage);
+            } else {
+                setErrorMessage('Erro ao adicionar o usuário. Tente novamente.');
+            }
+
+            console.error(errorMessage, error);
+            modalErrorOpenModal();
         }
     };
-    
+
     const updateUser = async () => {
         try {
             await API.put(`/cliente/update/${selectedUser.IdPessoa}`, selectedUser);
@@ -134,16 +145,16 @@ function Cliente() {
         } catch (error) {
             if (error.response) {
                 const errorData = error.response.data;
-                
-                const errorMessage = JSON.stringify(errorData, null, 2); 
-                
+
+                const errorMessage = JSON.stringify(errorData, null, 2);
+
                 setErrorMessage(errorMessage);
-              } else {
+            } else {
                 setErrorMessage('Erro ao editar o usuário. Tente novamente.');
-              }
-        
-              console.error(errorMessage, error);
-              modalErrorOpenModal();
+            }
+
+            console.error(errorMessage, error);
+            modalErrorOpenModal();
         }
     };
 
@@ -386,18 +397,18 @@ function Cliente() {
                     ) : (
                         <form action=" ">
                             <div className="grid grid-cols-6 gap-6">
-                            <div className="col-span-6 sm:col-span-3">
-  <label htmlFor="nome" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome <span className="text-red-600">*</span></label>
-  <input
-    type="text"
-    name="nome"
-    onChange={(e) => setCreateUser({ ...createUser, NomePessoa: e.target.value })}
-    id="nome"
-    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-    placeholder=""
-    required
-  />
-</div>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="nome" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nome <span className="text-red-600">*</span></label>
+                                    <input
+                                        type="text"
+                                        name="nome"
+                                        onChange={(e) => setCreateUser({ ...createUser, NomePessoa: e.target.value })}
+                                        id="nome"
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder=""
+                                        required
+                                    />
+                                </div>
                                 <div className="col-span-6 sm:col-span-3">
                                     {/* <label htmlFor="CPFouCNPJ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">CPF/CNPJ</label> */}
                                     <div className="mb-1">
@@ -537,7 +548,7 @@ function Cliente() {
                     <div className="p-10 pt-10 text-center">
                         <svg className="w-16 h-16 mx-auto text-red-600" fillRule="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">{errorMessage}</h3>
-                        <button onClick={ modalErrorCloseModal } className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                        <button onClick={modalErrorCloseModal} className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
                             OK
                         </button>
                     </div>

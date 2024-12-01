@@ -29,7 +29,10 @@ const RelatorioGenerator = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const generateReport = (tipo) => {
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
+    const generateReport = () => {
         const endpointMap = {
             compra: 'compra/relatorio/',
             venda: 'venda/relatorio/',
@@ -38,7 +41,7 @@ const RelatorioGenerator = () => {
             produto: 'produto/relatorio/',
         };
 
-        const endpoint = endpointMap[tipo];
+        const endpoint = endpointMap[selectedReport];
         if (!endpoint) {
             alert('Tipo de relatório desconhecido.');
             return;
@@ -47,7 +50,13 @@ const RelatorioGenerator = () => {
         setLoading(true);
         setError("");
 
-        API.get(endpoint, { responseType: 'blob' })
+        API.get(endpoint, {
+            params: {
+                data_inicio: startDate || undefined,
+                data_fim: endDate || undefined,
+            },
+            responseType: 'blob',
+        })
             .then(response => {
                 const pdfUrl = URL.createObjectURL(response.data);
                 setPdfUrl(pdfUrl);
@@ -59,15 +68,15 @@ const RelatorioGenerator = () => {
             });
     };
 
-    const handleSelectChange = (event) => {
-        const reportType = event.target.value;
-        setSelectedReport(reportType);
-        if (reportType) {
-            generateReport(reportType);
-        } else {
-            setPdfUrl("");
-        }
-    };
+    // const handleSelectChange = (event) => {
+    //     const reportType = event.target.value;
+    //     setSelectedReport(reportType);
+    //     if (reportType) {
+    //         generateReport(reportType);
+    //     } else {
+    //         setPdfUrl("");
+    //     }
+    // };
 
     return (
         <div >
@@ -80,28 +89,67 @@ const RelatorioGenerator = () => {
                     </div>
                     <div className="sm:flex">
                         <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-100">
-                            <form className="lg:pr-3" action="#" method="GET">
-                                <label htmlFor="reportSelect" className="sr-only">Selecione o tipo de relatório</label>
-                                <select
-                                    id="reportSelect"
-                                    value={selectedReport}
-                                    onChange={handleSelectChange}
-                                    className="bg-gray-50 border border-gray-300 text-gray-300 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-700 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                >
-                                    <option value="">-- Selecione o tipo de relatório --</option>
-                                    <option value="compra">Relatório de Compras</option>
-                                    <option value="venda">Relatório de Vendas</option>
-                                    <option value="cliente">Relatório de Clientes</option>
-                                    <option value="fornecedor">Relatório de Fornecedores</option>
-                                    <option value="produto">Relatório de Produtos</option>
-                                </select>
+                            <form className="lg:pr-3 w-full" action="#" method="GET">
+                                <div className="mb-4">
+                                    <label htmlFor="reportSelect" className="sr-only">Selecione o tipo de relatório</label>
+                                    <select
+                                        id="reportSelect"
+                                        value={selectedReport}
+                                        onChange={(e) => setSelectedReport(e.target.value)}
+                                        className="bg-gray-50 border border-gray-300 text-gray-300 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-700 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                    >
+                                        <option value="">-- Selecione o tipo de relatório --</option>
+                                        <option value="compra">Relatório de Compras</option>
+                                        <option value="venda">Relatório de Vendas</option>
+                                        <option value="cliente">Relatório de Clientes</option>
+                                        <option value="fornecedor">Relatório de Fornecedores</option>
+                                        <option value="produto">Relatório de Produtos</option>
+                                    </select>
+                                </div>
+
+                                {/* Container com Flexbox para alinhar lado a lado */}
+                                <div className="flex space-x-4">
+                                    <div className="w-1/2">
+                                        <label htmlFor="startDate" className="block text-gray-700">
+                                            Data de Início
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="startDate"
+                                            value={startDate}
+                                            onChange={(e) => setStartDate(e.target.value)}
+                                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                        />
+                                    </div>
+                                    <div className="w-1/2">
+                                        <label htmlFor="endDate" className="block text-gray-700">
+                                            Data de Fim
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="endDate"
+                                            value={endDate}
+                                            onChange={(e) => setEndDate(e.target.value)}
+                                            className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                        />
+                                    </div>
+                                    <div className="w-1/2">
+                                        <button
+                                            onClick={generateReport}
+                                            className="w-full py-2 px-4 rounded-lg bg-cyan-800 text-white"
+                                        >
+                                            Gerar
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {!selectedReport && !loading && !pdfUrl && (
+
+            {!loading && !pdfUrl && (
                 <div className="text-center p-6 rounded-lg shadow-lg">
                     <h2 className="text-xl text-gray-700">Bem-vindo ao Gerador de Relatórios!</h2>
                     <p className="mt-2 text-gray-500">Selecione um tipo de relatório para começar a gerar seu PDF. Escolha entre Relatório de Compras, Vendas, Clientes, Fornecedores ou Produtos.</p>

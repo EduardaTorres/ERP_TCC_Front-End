@@ -514,10 +514,10 @@ function Compra() {
                                             <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                                 <thead>
                                                     <tr>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
-                                                        <th className="p-4 text-sm font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Produto</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Quantidade</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Preço Unitário</th>
+                                                        <th className="p-4 text-sm text-start font-medium text-gray-700 whitespace-nowrap dark:text-black">Total</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
