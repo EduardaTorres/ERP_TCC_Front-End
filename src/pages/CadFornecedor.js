@@ -392,6 +392,19 @@ function Fornecedor() {
                                         required
                                     />
                                 </div>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="estado" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Estado</label>
+                                    <input
+                                        type="text"
+                                        name="estado"
+                                        value={selectedForn.Estado}
+                                        onChange={(e) => setSelectedForn({ ...selectedForn, Estado: e.target.value })}
+                                        id="estado"
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder=""
+                                        required
+                                    />
+                                </div>
                             </div>
                         </form>
                     ) : (
@@ -502,6 +515,18 @@ function Fornecedor() {
                                         name="cidade"
                                         onChange={(e) => setCreateForn({ ...createForn, Cidade: e.target.value })}
                                         id="cidade"
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder=""
+                                        required
+                                    />
+                                </div>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="estado" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Estado <span className="text-red-600">*</span></label>
+                                    <input
+                                        type="text"
+                                        name="estado"
+                                        onChange={(e) => setCreateForn({ ...createForn, Estado: e.target.value })}
+                                        id="estado"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required

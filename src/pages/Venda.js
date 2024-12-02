@@ -25,6 +25,11 @@ function Venda() {
     const openProdQtdModal = () => setIsModalProdQtdOpen(true);
     const closeProdQtdModal = () => setIsModalProdQtdOpen(false);
 
+    const [isModalCancelamento, setIsModalCancelamento] = useState(false);
+    const openCancelamento = () => setIsModalCancelamento(true);
+    const closeCancelamento = () => setIsModalCancelamento(false);
+    const [cancelamentoVenda, setCancelamentoVenda] = useState({});
+
     const [vends, setVends] = useState([]);
     const [tot, setTot] = useState([]);
     const [selectedVend, setSelectedVend] = useState(null);
@@ -39,6 +44,16 @@ function Venda() {
 
     const [nextPage, setNextPage] = useState();
     const [previousPage, setPreviousPage] = useState();
+
+    const handleConfirmCancelamento = () => {
+        console.log('teste')
+        // Lógica de cancelamento (API ou manipulação local)
+        console.log("Cancelando venda:", cancelamentoVenda);
+
+        // Fechar o modal e limpar os dados de cancelamento
+        closeCancelamento();
+        setCancelamentoVenda({});
+    };
 
     const nextItems = async () => {
         try {
@@ -276,19 +291,17 @@ function Venda() {
     const [descontoValor, setDescontoValor] = useState(0);
     const [descontoPercentual, setDescontoPercentual] = useState(0);
 
-   const calcularTotalComDesconto = () => {
-    let total = novaTotalVenda; // Valor antes do desconto
+    const calcularTotalComDesconto = () => {
+        let total = novaTotalVenda; // Valor antes do desconto
 
-    if (descontoValor > 0) {
-        total -= descontoValor; // Subtraia o desconto em valor
-    } else if (descontoPercentual > 0) {
-        total -= (novaTotalVenda * descontoPercentual) / 100; // Subtraia o desconto percentual
-    }
+        if (descontoValor > 0) {
+            total -= descontoValor; // Subtraia o desconto em valor
+        } else if (descontoPercentual > 0) {
+            total -= (novaTotalVenda * descontoPercentual) / 100; // Subtraia o desconto percentual
+        }
 
-    return Math.max(total, 0); // Garante que o total nunca será negativo
-};
-
-
+        return Math.max(total, 0); // Garante que o total nunca será negativo
+    };
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -474,6 +487,8 @@ function Venda() {
                                                 <span>Total:</span>
                                                 <span className="pl-2 text-gray-500">{selectedVend.TotalVenda.toFixed(2)}$</span>
                                             </div>
+
+
                                         </div>
                                     </>
                                 ) : (
@@ -526,7 +541,7 @@ function Venda() {
                                                 </tbody>
                                             </table>
                                         </div>
-                                       
+
                                     </>
                                 ) : (
                                     <>
@@ -547,8 +562,8 @@ function Venda() {
                                 )}
                             </div>
                             <div className="grid grid-cols-6 mt-5 gap-6">
-                                  {/* Forma de Pagamento */}
-                                  <div className="col-span-6 sm:col-span-2">
+                                {/* Forma de Pagamento */}
+                                <div className="col-span-6 sm:col-span-2">
                                     <label htmlFor="data" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Forma de Pagamento</label>
                                     <select
                                         value={formaPagamento}
@@ -620,32 +635,40 @@ function Venda() {
                                 </div>
                             </div>
                             <div className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
-                                            <div className="flex justify-end p-2 font-bold text-gray-700">
-                                                <span>Total:</span>
-                                                <span className="pl-2 text-gray-500">{novaTotalVenda.toFixed(2)}$</span>
-                                            </div>
-                                        </div>
-                            <div className="flex justify-end pr-2 font-bold text-gray-700">
-                                    <span>Desconto:</span>
-                                    <span className="pl-2 text-gray-500">
-                                        {descontoValor > 0
-                                            ? `- ${descontoValor.toFixed(2)}$`
-                                            : descontoPercentual > 0
-                                                ? `- ${descontoPercentual.toFixed(2)}%`
-                                                : "Sem desconto"}
-                                    </span>
-                                </div>
                                 <div className="flex justify-end p-2 font-bold text-gray-700">
-                                    <span>Total com Desconto:</span>
-                                    <span className="pl-2 text-gray-500">{calcularTotalComDesconto().toFixed(2)}$</span>
+                                    <span>Total:</span>
+                                    <span className="pl-2 text-gray-500">{novaTotalVenda.toFixed(2)}$</span>
                                 </div>
+                            </div>
+                            <div className="flex justify-end pr-2 font-bold text-gray-700">
+                                <span>Desconto:</span>
+                                <span className="pl-2 text-gray-500">
+                                    {descontoValor > 0
+                                        ? `- ${descontoValor.toFixed(2)}$`
+                                        : descontoPercentual > 0
+                                            ? `- ${descontoPercentual.toFixed(2)}%`
+                                            : "Sem desconto"}
+                                </span>
+                            </div>
+                            <div className="flex justify-end p-2 font-bold text-gray-700">
+                                <span>Total com Desconto:</span>
+                                <span className="pl-2 text-gray-500">{calcularTotalComDesconto().toFixed(2)}$</span>
+                            </div>
                         </form>
                     )}
                 </div>
                 {/* <!-- Modal footer --> */}
                 {selectedVend ?
-                    (<div className="items-center p-8 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
-
+                    (<div className="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                        <button
+                            className="py-2 px-8 rounded-lg bg-red-800 text-white"
+                            onClick={() => {
+                                openCancelamento();
+                                setCancelamentoVenda(selectedVend);
+                            }}
+                        >
+                            Cancelar Venda
+                        </button>
                     </div>)
                     :
                     (<div className="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
@@ -798,6 +821,42 @@ function Venda() {
                     </div>
                 </div>
             </ModalError>
+
+            <Modal isOpen={isModalCancelamento} onClose={() => closeCancelamento()}>
+                <div className="flex items-start p-5 border-b rounded-t dark:bg-cyan-800 dark:border-gray-700">
+                    <h3 className="text-xl font-semibold dark:text-white">
+                        Detalhes da venda
+                    </h3>
+                </div>
+                <div className="p-6 space-y-6">
+                    <h3 className="text-xl font-semibold text-gray-90">
+                        Confirmar Cancelamento
+                    </h3>
+                    <p >
+                        Tem certeza de que deseja cancelar a venda abaixo?
+                    </p>
+                    <div className=" p-4 rounded-lg">
+                        <p><strong>Cliente:</strong> {cancelamentoVenda?.IdCliente?.NomePessoa || "N/A"}</p>
+                        <p><strong>Data:</strong> {cancelamentoVenda?.DataVenda || "N/A"}</p>
+                        <p><strong>Total:</strong> {cancelamentoVenda?.TotalVenda?.toFixed(2) || "0.00"}$</p>
+                    </div>
+                </div>
+                <div className="flex justify-end space-x-4 p-4 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                    <button
+                        className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg hover:bg-gray-100  dark:bg-cyan-800 dark:text-white dark:hover:bg-gray-700"
+                        onClick={closeCancelamento}
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        className="px-5 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
+                        onClick={handleConfirmCancelamento}
+                    >
+                        Confirmar
+                    </button>
+                </div>
+            </Modal>
+
         </div >
     );
 }
