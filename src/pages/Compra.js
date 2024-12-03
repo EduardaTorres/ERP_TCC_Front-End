@@ -45,7 +45,7 @@ function Compra() {
         setSelectedProd({
             NomeProduto: '',
             QtdProduto: 0,
-            Preco: 0,
+            PrecoCompra: 0,
             ValorTotal: 0,
         });
     };
@@ -157,7 +157,7 @@ function Compra() {
                     "IdProduto": prod.IdProduto,
                     "NomeProduto": prod.NomeProduto,
                     "QtdProduto": prod.QtdProduto,
-                    "ValorUnitario": prod.Preco,
+                    "ValorUnitario": prod.PrecoCompra,
                     "ValorTotal": prod.ValorTotal
                 }))
             };
@@ -172,13 +172,13 @@ function Compra() {
         IdProduto: 0,
         NomeProduto: '',
         QtdProduto: 0,
-        Preco: 0,
+        PrecoCompra: 0,
         ValorTotal: 0,
     });
 
     const handleQuantidadeChange = (e) => {
         const novaQtd = e.target.value;
-        const novoValorTotal = novaQtd * selectedProd.Preco;
+        const novoValorTotal = novaQtd * selectedProd.PrecoCompra;
 
         setSelectedProd((prevState) => ({
             ...prevState,
@@ -293,7 +293,7 @@ function Compra() {
     }, 0);
 
     const novoValorTotal = addProdComp.reduce((acc, item) => {
-        return acc + item.QtdProduto * item.Preco;
+        return acc + item.QtdProduto * item.PrecoCompra;
     }, 0);
 
     return (
@@ -354,7 +354,7 @@ function Compra() {
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.IdCompra}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.IdFornecedor.NomeJuridico}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.DataCompra}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.ValorTotal.toFixed(2)}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{comp.ValorTotal}</td>
                                                 <td className="p-4 space-x-2 whitespace-nowrap">
                                                     <button type="button" onClick={() => { handleCompChange(comp.IdCompra); openModal(); }} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-cyan-800 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                                         <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"></path></svg>
@@ -456,7 +456,7 @@ function Compra() {
                                                         <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-200">
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.NomeProduto}</td>
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.QtdProduto}</td>
-                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.ValorUnitario.toFixed(2)}$</td>
+                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.ValorUnitario}$</td>
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{(item.QtdProduto * item.ValorUnitario).toFixed(2)}$</td>
                                                         </tr>
                                                     ))}
@@ -525,7 +525,7 @@ function Compra() {
                                                         <tr key={index} className="hover:bg-gray-100 dark:hover:bg-gray-200">
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.NomeProduto}</td>
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.QtdProduto}</td>
-                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.Preco.toFixed(2)}$</td>
+                                                            <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.PrecoCompra}$</td>
                                                             <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{item.ValorTotal}$</td>
                                                         </tr>
                                                     ))}
@@ -659,7 +659,7 @@ function Compra() {
                                 {prods.map((prod) => (
                                     <tr key={prod.IdProduto} className="hover:bg-gray-100 dark:hover:bg-gray-200">
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.NomeProduto}</td>
-                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{(prod.Preco).toFixed(2)}</td>
+                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.PrecoCompra}</td>
                                         <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{prod.Estoque}</td>
                                         <td className="p-4 space-x-2 whitespace-nowrap">
                                             <button type="button" onClick={() => { handleProdChange(prod.IdProduto); openProdQtdModal(); }} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-cyan-800 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
@@ -730,8 +730,8 @@ function Compra() {
                                     <input
                                         type="number"
                                         name="ValorUnitario"
-                                        value={(selectedProd.Preco.toFixed(2))}
-                                        onChange={(e) => setSelectedProd({ ...selectedProd, Preco: e.target.value })}
+                                        value={selectedProd.PrecoCompra}
+                                        onChange={(e) => setSelectedProd({ ...selectedProd, PrecoCompra: e.target.value })}
                                         id="ValorUnitario"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""

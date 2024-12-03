@@ -300,13 +300,26 @@ function Produto() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="preco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Preço</label>
+                                    <label htmlFor="preco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Preço Venda</label>
                                     <input
                                         type="text"
                                         name="preco"
-                                        value={(selectedProd.Preco).toFixed(2)}
+                                        value={selectedProd.Preco}
                                         onChange={(e) => setSelectedProd({ ...selectedProd, Preco: e.target.value })}
                                         id="preco"
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder=""
+                                        required
+                                    />
+                                </div>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="precoComp" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Preço Compra</label>
+                                    <input
+                                        type="text"
+                                        name="precoComp"
+                                        value={selectedProd.PrecoCompra}
+                                        onChange={(e) => setSelectedProd({ ...selectedProd, PrecoCompra: e.target.value })}
+                                        id="precoComp"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
@@ -370,12 +383,24 @@ function Produto() {
                                     />
                                 </div>
                                 <div className="col-span-6 sm:col-span-3">
-                                    <label htmlFor="preco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Preço <span className="text-red-600">*</span></label>
+                                    <label htmlFor="preco" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Preço Venda<span className="text-red-600">*</span></label>
                                     <input
                                         type="text"
                                         name="preco"
                                         onChange={(e) => setCreateProd({ ...createProd, Preco: e.target.value })}
                                         id="preco"
+                                        className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                        placeholder=""
+                                        required
+                                    />
+                                </div>
+                                <div className="col-span-6 sm:col-span-3">
+                                    <label htmlFor="precoComp" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Preço Compra <span className="text-red-600">*</span></label>
+                                    <input
+                                        type="text"
+                                        name="precoComp"
+                                        onChange={(e) => setCreateProd({ ...createProd, PrecoCompra: e.target.value })}
+                                        id="precoComp"
                                         className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                         placeholder=""
                                         required
