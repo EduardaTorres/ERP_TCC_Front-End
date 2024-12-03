@@ -40,7 +40,7 @@ function Receber() {
             console.error('Erro ao carregar itens:', error);
         }
     };
-    
+
     const previousItems = async () => {
         try {
             const response = await fetch(`${previousPage}`);
@@ -158,19 +158,19 @@ function Receber() {
                                 {contaReceber.length > 0 ? (
                                     <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                         {contaReceber.map((cont) => (
-                                            <tr key={cont.venda.IdVenda} className="hover:bg-gray-100 dark:hover:bg-gray-200">                                          
+                                            <tr key={cont.venda.IdVenda} className="hover:bg-gray-100 dark:hover:bg-gray-200">
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.venda.IdVenda}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.venda.IdCliente.NomePessoa}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.venda.DataVenda}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.venda.FormaPagamento}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.venda.Parcelas}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{cont.venda.Prazo}</td>
                                                 <td className="p-4 space-x-2 whitespace-nowrap">
                                                     <button
                                                         type="button"
                                                         onClick={() => { handleContaChange(cont.venda.IdVenda); openModal(); }}
                                                         className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-cyan-800 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                                                     >
-                                                        <svg className="w-4 h-4 mr-2" fill="currentColor"  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
+                                                        <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path>
                                                             <path
                                                                 fillRule="evenodd"
                                                                 d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
@@ -222,7 +222,7 @@ function Receber() {
                                 <table className="min-w-full bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                     <thead>
                                         <tr>
-                                            <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Valor</th>
+                                            <th className="p-4 text-sm font-medium  text-gray-700 whitespace-nowrap dark:text-black">Valor</th>
                                             <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Data de vencimento</th>
                                             <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Pagamento</th>
                                             <th className="p-4 text-sm font-medium text-left text-gray-700 whitespace-nowrap dark:text-black">Status</th>
@@ -231,29 +231,64 @@ function Receber() {
                                     <tbody className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
                                         {selectedConta.parcelas.map((parcela, idx) => (
                                             <tr key={idx} className="hover:bg-gray-100 dark:hover:bg-gray-200">
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.Valor} $</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.DataVencimento}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.Status ? 'Pago' : 'Pendente'}</td>
-                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">
-                                                    {parcela.Status ? (
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-6 h-6 text-green-500">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                                        </svg>
-                                                    ) : (
-                                                        <select
-                                                            value={parcela.Status ? 'Pago' : 'Pendente'}
-                                                            // onChange={(e) => handleStatusChange(e, idx)}
-                                                            onChange={(e) => {handleStatusChange(e, idx); confirmOpenModal()}}
-                                                            className="border rounded p-1"
-                                                        >
-                                                            <option value="Pendente">Pendente</option>
-                                                            <option value="Pago">Pago</option>
-                                                        </select>
-                                                    )}
-                                                </td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{parcela.Valor} $ </td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{new Date(parcela.DataVencimento).toLocaleDateString('pt-BR')}</td>
+                                                {parcela.Estornada === false ? (
+                                                    <>
+                                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">
+                                                            {parcela.Status ? 'Pago' : 'Pendente'}
+                                                        </td>
+                                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">
+                                                            {parcela.Status ? (
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    fill="none"
+                                                                    viewBox="0 0 24 24"
+                                                                    strokeWidth={3}
+                                                                    stroke="currentColor"
+                                                                    className="w-6 h-6 text-green-500"
+                                                                >
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                                </svg>
+                                                            ) : (
+                                                                <select
+                                                                    value={parcela.Status ? 'Pago' : 'Pendente'}
+                                                                    onChange={(e) => {
+                                                                        handleStatusChange(e, idx);
+                                                                        confirmOpenModal();
+                                                                    }}
+                                                                    className="border rounded p-1"
+                                                                    aria-label="Alterar status da parcela"
+                                                                >
+                                                                    <option value="Pendente">Pendente</option>
+                                                                    <option value="Pago">Pago</option>
+                                                                </select>
+                                                            )}
+                                                        </td>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">
+                                                            Estornada
+                                                        </td>
+                                                        <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="none"
+                                                                viewBox="0 0 24 24"
+                                                                strokeWidth={3}
+                                                                stroke="currentColor"
+                                                                className="w-6 h-6 text-red-500"
+                                                            >
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                                            </svg>
+                                                        </td>
+                                                    </>
+                                                )}
                                             </tr>
                                         ))}
                                     </tbody>
+
                                 </table>
                             </div>
                             <div className="bg-white divide-y divide-gray-200 dark:bg-white dark:divide-gray-700">
@@ -290,14 +325,14 @@ function Receber() {
                 </div>
             </ModalError>
 
-            <ModalError isOpen={confirmModalOpen} onClose={() => { confirmCloseModal(); setSelecteParcela(null)}}>
+            <ModalError isOpen={confirmModalOpen} onClose={() => { confirmCloseModal(); setSelecteParcela(null) }}>
                 <div className="relative bg-white rounded-lg shadow dark:bg-gray-800">
                     <div className="p-10 pt-10 text-center">
                         <svg className="w-16 h-16 mx-auto text-red-600" fillRule="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <h3 className="mt-5 mb-6 text-lg text-white dark:text-white">Deseja realmente alterar? Ação irreversível</h3>
-                        <button onClick={() => { updateContaReceber(); confirmCloseModal(); setSelecteParcela(null)}} className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                        <button onClick={() => { updateContaReceber(); confirmCloseModal(); setSelecteParcela(null) }} className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
                             OK
-                        </button><button onClick={ confirmCloseModal } className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
+                        </button><button onClick={confirmCloseModal} className="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-modal-hide="delete-user-modal">
                             Cancelar
                         </button>
                     </div>

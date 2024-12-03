@@ -45,14 +45,37 @@ function Venda() {
     const [nextPage, setNextPage] = useState();
     const [previousPage, setPreviousPage] = useState();
 
-    const handleConfirmCancelamento = () => {
-        console.log('teste')
-        // Lógica de cancelamento (API ou manipulação local)
-        console.log("Cancelando venda:", cancelamentoVenda);
+    const [motivo, setMotivo] = useState();
 
-        // Fechar o modal e limpar os dados de cancelamento
+    const handleConfirmCancelamento = async () => {
+        try {
+            const body = {
+                motivo: motivo,
+            };
+
+            await API.post(`/venda/estorno/?venda_id=${cancelamentoVenda.IdVenda}`, body);
+
+            console.log("Venda cancelada com sucesso!");
+
+            closeCancelamento();
+            setCancelamentoVenda({});
+            setMotivo('');
+        } catch (error) {
+            if (error.response) {
+                const errorData = error.response.data;
+
+                const errorMessage = JSON.stringify(errorData, null, 2);
+                setErrorMessage(errorMessage);
+            } else {
+                setErrorMessage("Erro ao cancelar venda. Tente novamente.");
+            }
+
+            console.error(errorMessage || error);
+            modalErrorOpenModal();
+        }
         closeCancelamento();
         setCancelamentoVenda({});
+        window.location.reload();
     };
 
     const nextItems = async () => {
@@ -349,6 +372,7 @@ function Venda() {
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Cliente</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Data</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Valor</th>
+                                        <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Status</th>
                                         <th scope="col" className="p-4 text-xs font-medium tracking-wider text-left text-gray-300 uppercase dark:text-white">Ação</th>
                                     </tr>
                                 </thead>
@@ -360,6 +384,9 @@ function Venda() {
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.IdCliente.NomePessoa}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.DataVenda}</td>
                                                 <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">{vend.TotalVenda.toFixed(2)}</td>
+                                                <td className="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-black">
+                                                    {vend.Estornada === true ? "Estornada" : "Em Aberto"}
+                                                </td>
                                                 <td className="p-4 space-x-2 whitespace-nowrap">
                                                     <button type="button" onClick={() => { handleVendChange(vend.IdVenda); openModal(); }} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-cyan-800 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
                                                         <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"></path></svg>
@@ -658,28 +685,39 @@ function Venda() {
                     )}
                 </div>
                 {/* <!-- Modal footer --> */}
-                {selectedVend ?
-                    (<div className="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                {selectedVend ? (
+                    <div className="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
+                        {/* Exibe o botão apenas se selectedVend.Estornada não for 'true' */}
+                        {selectedVend.Estornada === false ? (
+                            <button
+                                className="py-2 px-8 rounded-lg bg-red-800 text-white"
+                                onClick={() => {
+                                    openCancelamento();
+                                    setCancelamentoVenda(selectedVend);
+                                }}
+                            >
+                                Cancelar Venda
+                            </button>
+                        ) : (<p>Venda Estornada</p>)}
+                    </div>
+                ) : (
+                    <div className="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
                         <button
-                            className="py-2 px-8 rounded-lg bg-red-800 text-white"
-                            onClick={() => {
-                                openCancelamento();
-                                setCancelamentoVenda(selectedVend);
-                            }}
+                            onClick={handleSubmit}
+                            className="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                            type="submit"
                         >
-                            Cancelar Venda
-                        </button>
-                    </div>)
-                    :
-                    (<div className="items-center p-5 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
-                        <button onClick={handleSubmit} className="text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" type="submit">
                             Salvar Venda
                         </button>
-                        <button type="button" onClick={openProdModal} className="float-end text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                        <button
+                            type="button"
+                            onClick={openProdModal}
+                            className="float-end text-white bg-primary-700 border border-white hover:border-transparent hover:bg-white hover:text-black focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                        >
                             Adicionar Produto
                         </button>
-                    </div>)
-                }
+                    </div>
+                )}
             </Modal>
 
             <Modal isOpen={isModalProdOpen} onClose={() => { closeProdModal() }}>
@@ -829,18 +867,30 @@ function Venda() {
                     </h3>
                 </div>
                 <div className="p-6 space-y-6">
-                    <h3 className="text-xl font-semibold text-gray-90">
+                    <h3 className="text-xl font-semibold text-gray-900">
                         Confirmar Cancelamento
                     </h3>
-                    <p >
-                        Tem certeza de que deseja cancelar a venda abaixo?
-                    </p>
-                    <div className=" p-4 rounded-lg">
-                        <p><strong>Cliente:</strong> {cancelamentoVenda?.IdCliente?.NomePessoa || "N/A"}</p>
-                        <p><strong>Data:</strong> {cancelamentoVenda?.DataVenda || "N/A"}</p>
-                        <p><strong>Total:</strong> {cancelamentoVenda?.TotalVenda?.toFixed(2) || "0.00"}$</p>
+                    <p>Tem certeza de que deseja cancelar a venda abaixo?</p>
+                    {/* Layout em flexbox para organizar as colunas */}
+                    <div className="flex space-x-6">
+                        {/* Coluna com as informações da venda */}
+                        <div className="p-4 rounded-lg bg-gray-100 ">
+                            <p><strong>Cliente:</strong> {cancelamentoVenda?.IdCliente?.NomePessoa || "N/A"}</p>
+                            <p><strong>Data:</strong> {cancelamentoVenda?.DataVenda || "N/A"}</p>
+                            <p><strong>Total:</strong> {cancelamentoVenda?.TotalVenda?.toFixed(2) || "0.00"}$</p>
+                        </div>
+                        {/* Coluna com o motivo do cancelamento */}
+                        <div className="flex-1">
+                            <h3 className="mb-2 text-sm font-semibold text-gray-900">Motivo do Cancelamento</h3>
+                            <textarea
+                                onChange={(e) => setMotivo(e.target.value)}
+                                className="w-full h-24 p-2 border rounded-lg resize-none focus:outline-none focus:ring focus:ring-primary-300 dark:border-gray-600 dark:text-black"
+                                placeholder="Informe o motivo do cancelamento..."
+                            ></textarea>
+                        </div>
                     </div>
                 </div>
+
                 <div className="flex justify-end space-x-4 p-4 border-t border-gray-200 rounded-b dark:border-gray-700 dark:bg-cyan-800">
                     <button
                         className="px-5 py-2 text-sm font-medium text-gray-700 bg-white border rounded-lg hover:bg-gray-100  dark:bg-cyan-800 dark:text-white dark:hover:bg-gray-700"
@@ -849,7 +899,7 @@ function Venda() {
                         Cancelar
                     </button>
                     <button
-                        className="px-5 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
+                        className="px-5 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
                         onClick={handleConfirmCancelamento}
                     >
                         Confirmar

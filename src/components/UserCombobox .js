@@ -3,13 +3,19 @@ import API from '../utils/api';
 import { UserContext } from '../context/UserContext';
 
 const UserCombobox = () => {
+    const token = localStorage.getItem("authToken");
     const [users, setUsers] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const { selectedUser, setSelectedUser } = useContext(UserContext);
 
     const getUsers = useCallback(async () => {
         try {
-            const { data } = await API.get('/clientes/');
+            const { data } = await API.get('/clientes/', {
+                headers: {
+                    "Authorization": `Token ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
 
             if (data && data.results) {
                 setUsers(data.results);
